@@ -1,0 +1,86 @@
+programa ejemplo
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso depositoEn10(E flores:numero)
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    si(flores<>0)
+      repetir flores
+        BloquearEsquina(10,10)
+        Pos(10,10)
+        depositarFlor
+        Pos(av,ca)
+        LiberarEsquina(10,10)
+  fin
+areas
+  deposito: AreaC (10,10,10,10)
+  area3: AreaP (1,3,100,3)
+  area4: AreaP (1,4,100,4)
+  areaCosechador: AreaP (1,5,1,5)
+robots
+  robot recolector
+  variables
+    flores,esq:numero
+  comenzar
+    esq:= 0
+    flores:= 0
+    derecha
+    mientras(PosAv <100)
+      esq:=0
+      mientras ((PosAv <100)&(flores < 10)&(esq < 5))
+        juntarFlores(flores)
+        mover
+        esq:=esq+1
+        
+      si(esq=5)|(flores>=10)
+        si(flores>0)
+          depositoEn10(flores)
+          EnviarMensaje(V,r3)
+          flores:=0
+    juntarFlores(flores){para la ultima}
+    si (flores>0)
+      depositoEn10(flores)
+      EnviarMensaje(V,r3)    
+    EnviarMensaje(F,r3)
+  fin
+  robot cosechador
+  variables
+    ok:boolean
+    flores,terminados:numero
+  comenzar
+    flores:=0
+    terminados:=0
+    mientras(terminados<2)
+      RecibirMensaje(ok,*)
+      si(ok)
+        BloquearEsquina(10,10)
+        Pos(10,10)
+        juntarFlores(flores)
+        Pos(1,5)
+        LiberarEsquina(10,10)
+      sino
+        terminados:=terminados+1
+    Informar('total de flores',flores)
+  fin
+variables
+  r1,r2: recolector
+  r3:cosechador
+comenzar
+  AsignarArea(r1, deposito)
+  AsignarArea(r2, deposito)
+  AsignarArea(r3, deposito)
+  AsignarArea(r1,area3)
+  AsignarArea(r2,area4)
+  AsignarArea(r3,areaCosechador)
+  Iniciar(r1, 1,3)
+  Iniciar(r2, 1,4)
+  Iniciar(r3, 1,5)
+fin

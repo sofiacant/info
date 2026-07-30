@@ -1,0 +1,89 @@
+{Existen dos robots productores que recorren las avenidas 5 y 10 respectivamente, juntando todos los papeles de su avenida. A lo largo del recorrido, cada vez que juntan 5 papeles, los  depositan en la esquina (50,50). .
+{Además existen dos robots consumidores que intentan tomar una cantidad aleatoria de papeles (entre 2 y 5) de la esquina (50,50) para depositarla en su esquina de origen. Si la esquina (50,50) no posee la cantidad de papeles requerida, vuelven a su esquina de origen sin tomar ningún papel. Si luego de 8 intentos seguidos un consumidor detecta que la esquina (50,50) no tiene papeles suficientes para juntar, entonces asumirá que los productores ya han completado su trabajo y por lo tanto terminará su tarea también. Los consumidores inician en las esquinas (11,1) y (12,1) respectivamente. }
+
+programa ejemplo
+procesos
+  proceso juntarPapelesYDepositar(ES papeles:numero)
+  variables
+    av,ca:numero
+  comenzar
+    mientras(PosCa < 100)
+      mientras(papeles<5)
+        mientras(HayPapelEnLaEsquina)
+          tomarPapel
+          papel:=papel+1
+        si (papeles < 5)
+          mover
+      si(papeles=5)
+        av:=PosAv
+        ca:=PosCa
+        BloquearEsquina(50,50)
+        Pos(50,50)
+        repetir papeles
+          depositarPapel
+        Pos(av,ca)
+        LiberarEsquina(50,50)
+  fin
+  proceso tomaryDepositarConsumidores(ES p:numero)
+  variables
+    papeles,p:numero
+    av,ca:numero
+  comenzar
+    Random(papeles,2,5)
+    av:=PosAv
+    ca:=PosCa
+    BloquearEsquina(50,50)
+    repetir papeles
+      si(HayPapelEnLaEsquina)
+        tomarPapel
+        p:=p+1
+    si(p <> papeles)
+      repetir p
+        depositarPapel
+    Pos(av,ca)
+    LiberarEsquina(50,50)
+  fin
+areas
+  esquina50: AreaC (50,50,50,50)
+  areap1: AreaP(5,1,5,100)
+  areap2: AreaP(10,1,10,100)
+  areac1: AreaP(11,1,11,100)
+  areac2: AreaP(12,1,12,100)
+robots
+  robot consumidor
+  variables
+    intentos, p:numero
+  comenzar
+    p:=0
+    intentos:=0
+    mientras(intentos<8)
+      tomaryDepositarConsumidores(p)
+      si (p = 0)
+        intentos:=0
+      sino
+        intentos:=intentos+1
+  fin
+  robot productor
+  variables
+    papeles:numero
+  comenzar
+    papeles:=0
+    juntarPapelesYDepositar(papeles)
+  fin
+variables
+  c1,c2: consumidor
+  p1,p2: productor
+comenzar
+  AsignarArea(p1, esquina50)
+  AsignarArea(p2, esquina50)
+  AsignarArea(c1, esquina50)  
+  AsignarArea(c2, esquina50)
+  AsignarArea(p1,areap1)
+  AsignarArea(p2,areap2)
+  AsignarArea(c1,areac1)
+  AsignarArea(c2,areac2)
+  Iniciar(c1,11,1)
+  Iniciar(c2,12,1)
+  Iniciar(p1,5,1)
+  Iniciar(p2,10,1)
+fin

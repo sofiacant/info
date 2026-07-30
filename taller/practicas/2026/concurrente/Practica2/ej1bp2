@@ -1,0 +1,58 @@
+{Dos robots compiten para ver cuál junta más flores. El primer robot recoge todas las flores de la avenida 1 entre las calles 1 y 10. El segundo robot recoge todas las flores de la avenida 2, entre las calles 11 y 20. Al finalizar el recorrido, el robot que recogió mayor cantidad de flores debe informar la diferencia de flores que obtuvo respecto al robot perdedor (el que obtuvo menos flores). Los robots inician en las esquinas (1, 1) y (2, 11) respectivamente.
+{Modifique el ejercicio anterior, considerando que ahora habrá un robot fiscalizador, que será responsable de informar la diferencia de flores que obtuvo el ganador con respecto al perdedor. El robot fiscalizador se ubica en la esquina (2,1) }
+
+programa ej1p2
+procesos
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso recorrerAvenida(ES flores:numero)
+  comenzar
+    repetir 9
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+  fin
+areas
+  area1: AreaP (1,1,1,10)
+  area2: AreaP (2,11,2,20)
+  areaFiscal: AreaP(2,1,2,1)
+robots
+  robot robot1
+  variables
+    flores:numero
+  comenzar
+    flores:=0
+    recorrerAvenida(flores)
+    EnviarMensaje(flores,rf)
+  fin
+  robot fiscal
+  variables
+    f2:numero
+    f1:numero
+    dif:numero
+  comenzar
+    RecibirMensaje(f1,*)
+    RecibirMensaje(f2,*)
+    si (f1> f2)
+      dif:= f1-f2
+      Informar('La diferencia es ', dif)
+    sino
+      dif := f2-f1
+      Informar('La diferencia es ', dif)
+  fin
+variables
+  r1: robot1
+  r2:robot1
+  rf:fiscal
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(rf,areaFiscal)
+  Iniciar(r1, 1,1)
+  Iniciar(r2,2,11)
+  Iniciar(rf, 2,1)
+fin

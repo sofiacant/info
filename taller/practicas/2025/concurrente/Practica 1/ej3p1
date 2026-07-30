@@ -1,0 +1,65 @@
+programa ejemplo
+procesos
+  proceso juntarPapeles(ES cantP:numero)
+  comenzar
+    cantP:=0
+    mientras HayPapelEnLaEsquina
+      tomarPapel 
+      cantP:= cantP + 1
+    repetir cantP
+      depositarPapel
+  fin
+  proceso juntarFlores(ES cantF:numero)
+  comenzar
+    cantF:=0
+    mientras HayFlorEnLaEsquina
+      tomarFlor 
+      cantF:= cantF + 1
+    repetir cantF
+      depositarFlor
+  fin 
+  proceso subirEscalon(E cantR:numero; ES cantP:numero ; ES cantF:numero; ES cantEsc:numero)
+  comenzar
+    repetir cantR
+      juntarPapeles(cantP)
+      juntarFlores(cantF)
+      mover
+    derecha
+    repetir cantR
+      juntarPapeles(cantP)
+      juntarFlores(cantF)
+      mover
+    cantR:=cantR+1
+    repetir 3
+      derecha
+    si(cantP-cantF = 1)
+      cantEsc:= cantEsc+1  
+  fin
+  proceso subirEscalera(ES cantR:numero; ES cantP:numero ; ES cantF:numero; ES cantEsc:numero)
+  comenzar
+    repetir 4
+      subirEscalon(cantR,cantP,cantF,cantEsc)
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  variables
+    cantR, cantP, cantF, cantEsc:numero
+  comenzar
+    cantR:=1
+    subirEscalera(cantR,cantP,cantF,cantEsc)
+    Informar('Cantidad de escalones ', cantEsc)
+  fin
+variables
+  r1: robot1
+  r2: robot1
+  r3: robot1
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r3, ciudad)
+  Iniciar(r1, 22,6)
+  Iniciar(r2,17,10)
+  Iniciar(r3,12,14)
+fin

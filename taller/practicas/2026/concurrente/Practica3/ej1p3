@@ -1,0 +1,126 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso juntarFlores(ES f:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      f:= f+1
+  fin
+  proceso juntarPapeles(ES p:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:= p+1
+  fin
+  proceso ingresoEsquinaP(ES p:numero)
+  variables
+    av,ca:numero
+    avIni,caIni:numero
+  comenzar
+    avIni:=PosAv
+    caIni:=PosCa
+    Random(av,6,10)
+    Random(ca,1,9)
+    BloquearEsquina(av,ca)
+    Pos(av,ca)
+    juntarPapeles(p)
+    Pos(avIni,caIni)
+    LiberarEsquina(av,ca)
+  fin
+  proceso ingresoEsquinaF(ES f:numero)
+  variables
+    av,ca:numero
+    avIni,caIni:numero
+  comenzar
+    avIni:=PosAv
+    caIni:=PosCa
+    Random(av,1,5)
+    Random(ca,1,10)
+    BloquearEsquina(av,ca)
+    Pos(av,ca)
+    juntarFlores(f)
+    Pos(avIni,caIni)
+    LiberarEsquina(av,ca)
+  fin
+  
+  proceso depositarF(ES f:numero)
+  variables
+    avIni,caIni:numero
+  comenzar
+    avIni:= PosAv
+    caIni:= PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    depositarFlor
+    Pos(avIni,caIni)
+    LiberarEsquina(10,10)
+  fin
+  proceso depositarP(ES p:numero)
+  variables
+    avIni,caIni:numero
+  comenzar
+    avIni:= PosAv
+    caIni:= PosCa
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    depositarPapel
+    Pos(avIni,caIni)
+    LiberarEsquina(10,10)
+  fin
+areas
+  areaFloreros: AreaPC (1,1,5,10)
+  areaPapeleros: AreaPC(6,1,10,9)
+  area1: AreaP (6,10,6,10)
+  area2: AreaP (7,10,7,10)
+  area3: AreaP (8,10,8,10)
+  area4: AreaP (9,10,9,10)
+  deposito: AreaC(10,10,10,10)
+robots
+  robot florero
+  variables
+    f:numero
+  comenzar
+    f:=0
+    repetir 5
+      ingresoEsquinaF(f)
+    repetir f
+      depositarF(f)
+  fin
+  robot papelero
+  variables
+    p:numero
+  comenzar
+    p:=0
+    repetir 3
+      ingresoEsquinaP(p)
+    repetir p
+      depositarP(p)
+  fin
+variables
+  p1: papelero
+  p2: papelero
+  f1: florero
+  f2: florero
+comenzar
+  AsignarArea(p1, areaPapeleros)
+  AsignarArea(p2, areaPapeleros)
+  AsignarArea(f1, areaFloreros)
+  AsignarArea(f2, areaFloreros)
+  AsignarArea(f1, area1)
+  AsignarArea(f2, area2)
+  AsignarArea(p1, area3)  
+  AsignarArea(p2, area4)
+  AsignarArea(p1, deposito)
+  AsignarArea(p2, deposito)
+  AsignarArea(f1, deposito)
+  AsignarArea(f2, deposito)
+  Iniciar(f1,6,10)
+  Iniciar(f2,7,10)
+  Iniciar(p1,8,10)
+  Iniciar(p2,9,10)
+fin

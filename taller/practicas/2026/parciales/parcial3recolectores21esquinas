@@ -1,0 +1,90 @@
+programa ejemplo
+procesos
+  proceso enviarIDS
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:=papeles+1
+  fin
+  proceso depositarPapeles(E papeles:numero)
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    repetir papeles
+      BloquearEsquina(3,20)
+      Pos(3,20)
+      depositarPapel
+      Pos(av,ca)
+      LiberarEsquina(3,20)
+  fin
+  proceso recorrerCalle(ES papeles:numero)
+  comenzar
+    repetir 20
+      juntarPapeles(papeles)
+      mover
+    juntarPapeles(papeles)
+  fin
+areas
+  esquina: AreaPC (3,20,3,20)
+  calle2: AreaPC (1,2,63,2)
+  areajefe: AreaP(2,1,2,1)
+robots
+  robot robot1
+  variables
+    id,papeles:numero
+  comenzar
+    RecibirMensaje(id,jefe)
+    papeles:=0
+    derecha
+    recorrerCalle(papeles)
+  fin
+  robot robot2
+  variables
+    id,papeles:numero
+  comenzar
+    RecibirMensaje(id,jefe)
+    papeles:=0
+    derecha
+    recorrerCalle(papeles)
+  fin
+  robot robot3
+  variables
+    id,papeles:numero
+  comenzar
+    RecibirMensaje(id,jefe)
+    papeles:=0
+    derecha
+    recorrerCalle(papeles)
+  fin
+  robot robotjefe
+  variables
+    p1:numero
+  comenzar
+    enviarIDS
+  fin
+variables
+  r1: robot1
+  r2:robot2
+  r3:robot3
+  jefe:robotjefe
+comenzar
+  AsignarArea(r1, esquina)
+  AsignarArea(r2, esquina)
+  AsignarArea(r3, esquina)
+  AsignarArea(r1,calle2)
+  AsignarArea(r2,calle2)
+  AsignarArea(r3,calle2)
+  AsignarArea(jefe,areajefe)
+  Iniciar(jefe, 2,1)
+  Iniciar(r1,1,2)
+  Iniciar(r2,22,2)
+  Iniciar(r3,43,2)
+fin

@@ -1,0 +1,20 @@
+CUANDO LA MATRIZ NO SE LLENA:
+-Creamos la matriz
+-vector con dimensiones por fila
+
+matriz[meses][dias];
+
+vDiasPorFilas= new int[meses];  guarda la cantidad que hay por FILA
+
+te llega por parámetro un mes M
+
+if(M-1 < meses){
+	if (vDiasPorFilas[m-1] < días){
+		matriz[m-1][vDiasPorFilas[m-1]]=  C;
+		vDiasPorFilas++;
+		PUDE=TRUE;
+
+SI SE LLENA:
+DOBLE FOR para recorrerla:
+
+if doble para cargarla;

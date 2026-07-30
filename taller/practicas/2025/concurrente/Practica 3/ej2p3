@@ -1,0 +1,172 @@
+programa ej2p3
+procesos
+  proceso juntarFlores(ES flores: numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      papeles:=papeles+1
+  fin
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso hacerEscalonF(E cant:numero; ES flores:numero )
+  comenzar
+    repetir cant
+      mover
+    juntarFlores(flores)
+    derecha
+    repetir cant
+      mover
+    juntarFlores(flores)  
+    izquierda
+  fin
+  proceso ultimoEscF(ES flores:numero)
+  comenzar
+    mover
+    derecha
+    BloquearEsquina(16,16)
+    mover
+    EnviarMensaje(1,rjefe)
+    juntarFlores(flores)
+    repetir 2
+      derecha
+    mover
+    LiberarEsquina(16,16) 
+  fin
+  proceso hacerEscalonInvertidoF(E cant: numero; ES flores:numero)
+  comenzar
+    repetir cant
+      mover
+    juntarFlores(flores)
+    derecha
+    repetir cant
+      mover
+    izquierda
+  fin
+  proceso subirEscaleraInvF2(E cant:numero; ES flores:numero)
+  comenzar
+    repetir 4
+      hacerEscalonInvertidoF(cant,flores)
+      cant:=cant+1
+  fin
+  proceso subirEscaleraF1(E cant:numero; ES flores:numero)
+  comenzar
+    repetir 4
+      hacerEscalonF(cant,flores)
+      cant:=cant-1  
+  fin
+  proceso hacerEscalonP(E cant:numero; ES papeles:numero )
+  comenzar
+    repetir cant
+      mover
+    juntarPapeles(papeles)
+    izquierda
+    repetir cant
+      mover
+    derecha
+  fin
+  proceso subirEscaleraP2(E cant:numero; ES papeles:numero)
+  comenzar
+    repetir 4 
+      hacerEscalonP(cant,papeles)
+      cant:=cant+1
+  fin 
+  proceso ultimoEscP(ES papeles:numero)
+  comenzar
+    mover
+    izquierda
+    BloquearEsquina(16,16)
+    mover
+    EnviarMensaje(2,rjefe)
+    juntarPapeles(papeles)
+    repetir 2
+      derecha
+    mover
+    LiberarEsquina(16,16)
+  fin
+  proceso hacerEscalonInvertidoP(E cant: numero; ES papeles:numero)
+  comenzar
+    repetir cant
+      mover
+    juntarPapeles(papeles)
+    izquierda
+    repetir cant
+      mover
+    juntarPapeles(papeles) 
+    derecha
+  fin
+  proceso subirEscaleraInvP1(E cant:numero; ES papeles:numero)
+  comenzar
+    repetir 4
+      hacerEscalonInvertidoP(cant,papeles)
+      cant:=cant-1
+  fin
+areas
+  ciudadF: AreaP (1,1,14,30)
+  ciudadF2: AreaP (15,14,15,17)
+  ciudadP: AreaP (17,1,31,30)
+  esquina: AreaPC (16,16,16,16)
+  areaJefe: AreaP(15,1,15,1)
+robots
+  robot robot1
+  variables
+    cant,flores:numero
+  comenzar
+    cant:=5
+    flores:=0
+    subirEscaleraF1(cant,flores)
+    ultimoEscF(flores)
+    cant:=2
+    subirEscaleraInvF2(cant,flores)
+    Informar('Flores ',flores)
+    EnviarMensaje(V,rjefe)
+  fin
+  robot robot2
+  variables
+    papeles,cant:numero
+  comenzar
+    papeles:=0
+    cant:=5
+    subirEscaleraInvP1(cant,papeles)
+    ultimoEscP(papeles)
+    cant:=2
+    subirEscaleraP2(cant,papeles) 
+    Informar('Papeles ',papeles)
+    EnviarMensaje(V,rjefe)
+  fin
+  robot rJefe
+  variables
+    id,ganador:numero
+    termino:boolean
+  comenzar
+    RecibirMensaje(id,*)
+    ganador:=id
+    RecibirMensaje(id,*)
+    repetir 2
+      RecibirMensaje(termino, *)
+    Informar('Ganador ', ganador)
+    
+  fin
+variables
+  r1: robot1
+  r2: robot2
+  rjefe: rJefe
+comenzar
+  AsignarArea(r1, ciudadF)
+  AsignarArea(r1, esquina)
+  AsignarArea(r1,ciudadF2)
+  AsignarArea(r2,ciudadP)
+  AsignarArea(r2, esquina)
+  AsignarArea(rjefe,areaJefe)
+  Iniciar(r1, 1,1)
+  Iniciar(r2,31,1)
+  Iniciar(rjefe,15,1)
+fin

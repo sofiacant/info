@@ -1,0 +1,195 @@
+programa parcialP
+procesos
+  proceso asignarID
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+  proceso tramo1(ES p:numero)
+  comenzar
+    repetir 19
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        p:=p+1
+      mover
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+  proceso tramo2(ES p:numero)
+  comenzar
+    repetir 20
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        p:=p+1
+      mover
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+  proceso tramo3(ES p:numero)
+  comenzar
+    repetir 21
+      mientras(HayPapelEnLaEsquina)
+        tomarPapel
+        p:=p+1
+      mover
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      p:=p+1
+  fin
+  proceso dejarF
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    BloquearEsquina(3,20)
+    Pos(3,20)
+    si(HayPapelEnLaBolsa)
+      depositarPapel
+    Pos(av,ca)
+    LiberarEsquina(3,20)
+  fin
+  proceso juntarF(E p:numero)
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    BloquearEsquina(3,20)
+    Pos(3,20)
+    repetir p
+      si(HayPapelEnLaEsquina)
+        tomarPapel
+    Pos(av,ca)
+    LiberarEsquina(3,20)
+  fin
+areas
+  areaJ : AreaP(2, 1, 2, 1)
+  area1 : AreaP(1, 2, 20, 2)
+  area2 : AreaP(21, 2, 41, 2)
+  area3 : AreaP(42, 2, 63, 2)
+  deposito : AreaPC(3,20,3,20)
+robots
+  robot recolector1
+  variables
+    p,id,cant:numero
+    ok:boolean
+  comenzar
+    derecha
+    p:=0
+    RecibirMensaje(id,rj)
+    tramo1(p)
+    EnviarMensaje(V,r2)
+    EnviarMensaje(id,rj)
+    EnviarMensaje(p,rj)
+    repetir p
+      dejarF
+    RecibirMensaje(ok,rj)
+    RecibirMensaje(cant,rj)
+    si(ok)
+      juntarF(cant)
+  fin 
+  robot recolector2
+  variables
+    p,id,cant:numero
+    ok:boolean
+  comenzar
+    derecha
+    p:=0
+    RecibirMensaje(id,rj)
+    RecibirMensaje(ok,r1)
+    si(ok)
+      tramo2(p)
+    EnviarMensaje(V,r3)
+    EnviarMensaje(id,rj)
+    EnviarMensaje(p,rj)
+    repetir p
+      dejarF
+    RecibirMensaje(ok,rj)
+    RecibirMensaje(cant,rj)
+    si(ok)
+      juntarF(cant)
+  fin 
+  robot recolector3
+  variables
+    p,id,cant:numero
+    ok:boolean
+  comenzar
+    derecha
+    p:=0
+    RecibirMensaje(id,rj)
+    RecibirMensaje(ok,r2)
+    si(ok)
+      tramo3(p)
+    EnviarMensaje(id,rj)
+    EnviarMensaje(p,rj)
+    repetir p
+      dejarF
+    RecibirMensaje(ok,rj)
+    RecibirMensaje(cant,rj)
+    si(ok)
+      juntarF(cant)
+  fin 
+  robot jefe
+  variables
+    id,p,cant,min,idMin:numero
+  comenzar
+    min:=99999999
+    asignarID
+    repetir 3
+      RecibirMensaje(id,*)
+      si(id=1)
+        RecibirMensaje(p,r1)
+      sino
+        si(id=2)
+          RecibirMensaje(p,r2)
+        sino
+          RecibirMensaje(p,r3)
+    cant:=cant+p
+    si(p<min)
+      min:=p
+      idMin:=id
+    si(idMin=1)
+      EnviarMensaje(V,r1)
+      EnviarMensaje(cant,r1)
+      EnviarMensaje(F,r2) 
+      EnviarMensaje(0,r2)     
+      EnviarMensaje(F,r3)
+      EnviarMensaje(0,r3)
+    sino
+      si(idMin=2)
+        EnviarMensaje(F,r1)
+        EnviarMensaje(0,r1)
+        EnviarMensaje(V,r2)
+        EnviarMensaje(cant,r2)      
+        EnviarMensaje(F,r3)
+        EnviarMensaje(0,r3)
+      sino
+        EnviarMensaje(F,r1)
+        EnviarMensaje(0,r1)
+        EnviarMensaje(F,r2)
+        EnviarMensaje(0,r2)      
+        EnviarMensaje(V,r3)
+        EnviarMensaje(cant,r3)
+  fin
+variables
+  r1 : recolector1
+  r2 : recolector2
+  r3 : recolector3
+  rj : jefe
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r2 ,area2)
+  AsignarArea(r3, area3)
+  AsignarArea(r1, deposito)
+  AsignarArea(r2 ,deposito)
+  AsignarArea(r3, deposito)
+  AsignarArea(rj, areaJ)
+  Iniciar(r1, 1 ,2)
+  Iniciar(r2, 21, 2)
+  Iniciar(r3, 42, 2)
+  Iniciar(rj, 2, 1)
+fin

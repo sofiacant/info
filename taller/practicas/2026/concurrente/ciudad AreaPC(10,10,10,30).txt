@@ -1,0 +1,96 @@
+ ciudad: AreaPC(10,10,10,30)
+  ciudad2: AreaPC(10,30,30,30)
+  ciudad3: AreaPC(30,30,30,10)
+  ciudad4: AreaPC(30,10,10,30)
+
+
+ si (PosAv 10) & (PosCa 30)
+      derecha
+    sino 
+       si (PosAv 30)
+         si (PosCa 30)
+           repetir 2
+             derecha
+         sino 
+           si (PosCa 10)
+             repetir 3
+               derecha
+
+
+
+
+programa ejemplo
+procesos
+  proceso recorrerAvenida(ES cantPapeles: numero)
+  comenzar
+    repetir 19
+      mientras HayPapelEnLaEsquina 
+        tomarPapel
+        cantPapeles := cantPapeles + 1
+      mover
+    mientras HayPapelEnLaEsquina
+      tomarPapel 
+      cantPapeles := cantPapeles + 1
+  fin
+areas
+  ciudad: AreaC(1,1,100,100)
+robots
+  robot robot1
+  variables
+    cantPapeles:numero
+  comenzar
+    cantPapeles:= 0
+    recorrerAvenida(cantPapeles)
+    Informar('Papeles ', cantPapeles)
+  fin
+variables
+  r1: robot1
+  r2: robot1
+  r3: robot1
+  r4: robot1
+comenzar
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r3, ciudad)
+  AsignarArea(r4, ciudad)
+  Iniciar(r1, 10, 10)
+  derecha
+  Iniciar(r2, 10, 30)
+  repetir 2
+    derecha
+  Iniciar(r3, 30, 30)
+  repetir 3
+    derecha
+  Iniciar(r4, 30, 10)
+fin
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

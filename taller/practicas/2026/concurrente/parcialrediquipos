@@ -1,0 +1,113 @@
+programa ej1
+procesos
+  proceso deFuenteABaseFlor
+  comenzar
+    Pos(10,12)
+    tomarFlor
+    BloquearEsquina(12,11)
+    Pos(12,11)
+    depositarFlor
+    Pos(11,12)
+    LiberarEsquina(12,11)
+  fin
+  proceso deFuenteABasePapel
+  comenzar
+    Pos(10,10)
+    tomarPapel
+    BloquearEsquina(12,11)
+    Pos(12,11)
+    depositarPapel
+    Pos(11,10)
+    LiberarEsquina(12,11)
+  fin
+areas
+  fuenteFlores: AreaP (10,12,11,12)
+  fuentePapeles: AreaP (10,10,11,10)
+  areaFiscal: AreaP (20,11,20,11)
+  Base: AreaPC (12,11,12,11)
+  depositoAzul: AreaP (12,12,20,12)
+  depositoVerde: AreaP (12,10,20,10)
+  
+robots
+  robot recolectorAzul
+  comenzar
+    repetir 7
+      deFuenteABaseFlor
+      EnviarMensaje(V,da)
+  fin
+  robot depositadorAzul
+  variables
+    av,id:numero
+    ok:boolean
+  comenzar
+    RecibirMensaje(id,fisc)
+    av:=13
+    derecha
+    repetir 7
+      RecibirMensaje(ok,ra)
+      BloquearEsquina(12,11)
+      Pos(12,11)
+      tomarFlor
+      Pos(av,12)
+      LiberarEsquina(12,11)
+      av:=av+1
+    EnviarMensaje(id,fisc)
+  fin
+  robot recolectorVerde
+  comenzar
+    repetir 7
+      deFuenteABasePapel
+      EnviarMensaje(V,dv)
+  fin
+  robot depositadorVerde
+  variables
+    av,id:numero
+    ok:boolean
+  comenzar
+    RecibirMensaje(id,fisc)
+    derecha
+    av:=13
+    repetir 7
+      RecibirMensaje(ok,rv)
+      BloquearEsquina(12,11)
+      Pos(12,11)
+      tomarPapel
+      Pos(av,10)
+      LiberarEsquina(12,11)
+      av:=av+1
+    EnviarMensaje(id,fisc)
+  fin
+  robot fiscal
+  variables
+    id,win:numero
+  comenzar
+    derecha
+    EnviarMensaje(1,da)
+    EnviarMensaje(2,dv)
+    RecibirMensaje(id,*)
+    win:=id
+    RecibirMensaje(id,*)
+    Informar('ganador', win)
+  fin
+variables
+  ra:recolectorAzul
+  da:depositadorAzul
+  rv:recolectorVerde
+  dv:depositadorVerde
+  fisc: fiscal
+comenzar
+  AsignarArea(ra,fuenteFlores)
+  AsignarArea(da, depositoAzul)
+  AsignarArea(rv,fuentePapeles)
+  AsignarArea(dv, depositoVerde)
+  AsignarArea(fisc,areaFiscal)
+  AsignarArea(ra,Base)
+  AsignarArea(da,Base)
+  AsignarArea(rv,Base)
+  AsignarArea(dv,Base)
+  Iniciar(fisc, 20,11)
+  Iniciar(ra,11,12)
+  Iniciar(da,12,12)
+  Iniciar(rv,11,10)
+  Iniciar(dv,12,10)
+fin

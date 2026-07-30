@@ -1,0 +1,88 @@
+programa ejemplo
+procesos
+  proceso enviarIDs
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)      
+    EnviarMensaje(4,r4)
+  fin
+  proceso juntarFlor(E av: numero; E ca:numero)
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    si(HayFlorEnLaEsquina)
+      tomarFlor
+    Pos(av,ca)
+    LiberarEsquina(50,50)
+  fin
+areas
+  esquina: AreaPC (50,50,50,50)
+  area1: AreaP(2,2,2,2)
+  area2: AreaP(3,3,3,3)
+  area3: AreaP(4,4,4,4)
+  area4: AreaP(5,5,5,5)
+  areajefe: AreaP (1,1,1,1)
+robots
+  robot rlimpiador
+  variables
+    ok:boolean
+    av,ca,id,miID:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    RecibirMensaje(miID,rjefe)
+    repetir 5
+      RecibirMensaje(ok,rjefe)
+      si(ok)
+        juntarFlor(av,ca)
+  fin
+  robot robotjefe
+  variables
+    id:numero
+  comenzar
+    enviarIDs
+    repetir 5
+      Random(id,1,4)
+      si (id=1)
+        EnviarMensaje(V,r1)
+        EnviarMensaje(F,r2)
+        EnviarMensaje(F,r3)
+        EnviarMensaje(F,r4)
+      sino 
+        si(id=2)
+          EnviarMensaje(V,r2)
+          EnviarMensaje(F,r1)
+          EnviarMensaje(F,r3)
+          EnviarMensaje(F,r4)
+        sino
+          si (id=3)
+            EnviarMensaje(V,r3)
+            EnviarMensaje(F,r2)
+            EnviarMensaje(F,r1)
+            EnviarMensaje(F,r4)
+          sino
+            EnviarMensaje(V,r4)
+            EnviarMensaje(F,r2)
+            EnviarMensaje(F,r3)
+            EnviarMensaje(F,r1)
+  fin
+variables
+  r1,r2,r3,r4: rlimpiador
+  rjefe:robotjefe
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(r3, area3)
+  AsignarArea(r4, area4)
+  AsignarArea(rjefe,areajefe)
+  AsignarArea(r1,esquina)
+  AsignarArea(r2,esquina)
+  AsignarArea(r3,esquina)
+  AsignarArea(r4,esquina)
+  Iniciar(r1, 2,2)  
+  Iniciar(r2, 3,3)
+  Iniciar(r3, 4,4)
+  Iniciar(r4, 5,5)
+  Iniciar(rjefe, 1,1)
+fin

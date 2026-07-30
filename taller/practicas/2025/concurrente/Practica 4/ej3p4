@@ -1,0 +1,67 @@
+programa ej3p4
+procesos
+  proceso enviarIds
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)    
+    EnviarMensaje(3,r3)
+  fin
+areas
+  ciudad1: AreaP (1,1,1,100)
+  ciudad2: AreaP (2,1,2,100)
+  ciudad3: AreaP (3,1,3,100)
+  areaCoord: AreaP (5,1,5,1)
+robots
+  robot rVaciador
+  variables
+    id:numero
+    esq:numero
+    ok:boolean
+  comenzar
+    esq:=1
+    ok:=F
+    RecibirMensaje(id,rCoord)
+    mientras(PosCa<100)
+      si(esq < 5)
+        mientras HayPapelEnLaEsquina
+          tomarPapel
+          mover
+          esq:=esq+1
+      sino
+        si (id=1)
+          EnviarMensaje(V,r2)
+          EnviarMensaje(V,r3)
+          RecibirMensaje(ok,*)
+          RecibirMensaje(ok,*)
+        sino
+          si(id=2)
+            EnviarMensaje(V,r1)
+            EnviarMensaje(V,r3)
+            RecibirMensaje(ok,*)
+            RecibirMensaje(ok,*)
+          sino
+            EnviarMensaje(V,r1)
+            EnviarMensaje(V,r2)
+            RecibirMensaje(ok,*)
+            RecibirMensaje(ok,*)
+      esq:=0
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  robot rCoordinador
+  comenzar
+    enviarIds
+  fin
+variables
+  r1,r2,r3: rVaciador
+  rCoord:rCoordinador
+comenzar
+  AsignarArea(r1, ciudad1)
+  AsignarArea(r2, ciudad2)
+  AsignarArea(r3, ciudad3)
+  AsignarArea(rCoord, areaCoord)
+  Iniciar(r1, 1,1)
+  Iniciar(r2,2,1)
+  Iniciar(r3,3,1)
+  Iniciar(rCoord, 5,1)
+fin
