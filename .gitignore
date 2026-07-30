@@ -1,0 +1,7 @@
+# pascal
+*.o
+
+# java
+**build/
+
+**dist/
