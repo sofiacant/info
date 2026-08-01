@@ -1,0 +1,109 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemploTK
+procesos
+  proceso juntarF(ES f: numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso buscarF(E f:numero; E av:numero; E ca:numero)
+  comenzar
+    Pos(50,50)
+    repetir f
+      tomarFlor
+    Pos(av,ca)
+  fin
+  proceso depositar(E f:numero;E av:numero; ES ca:numero)
+  comenzar
+    repetir f
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(50,50)
+  fin
+  proceso cuadrado(E tam:numero; ES f: numero)
+  comenzar
+    repetir 4
+      repetir tam
+        juntarF(f)
+        mover
+      derecha
+  fin 
+areas
+  ar1:AreaP(1,1,6,17)
+  ar2:AreaP(8,1,13,17)
+  ar3:AreaP(15,1,20,17)
+  depo:AreaC(50,50,50,50)
+  arc:AreaP(22,1,22,1)
+robots
+  robot robot1
+  variables
+    id,f,tam,av,ca :numero
+  comenzar
+    f:=0
+    av:=PosAv
+    ca:=PosCa
+    RecibirMensaje(id,RC)
+    repetir 3
+      EnviarMensaje(id,RC)
+      RecibirMensaje(tam,RC)
+      cuadrado(tam,f)
+      ca:=ca+tam+1
+      Pos(av,ca)
+    depositar(f,av,ca)
+    EnviarMensaje(f,RC)
+  fin
+  robot robot2
+  variables
+    id,tam,ft,f,av,ca:numero
+  comenzar
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+    repetir 9
+      RecibirMensaje(id,*)
+      si id =1
+        Random(tam,1,5)
+        EnviarMensaje(tam,R1)
+      sino
+        si id =2
+          Random(tam,1,5)
+          EnviarMensaje(tam,R2)
+        sino
+          Random(tam,1,5)
+          EnviarMensaje(tam,R3)
+    ft:=ft+f
+    repetir 3
+      RecibirMensaje(f,*)
+      ft:=ft+f
+    av:=PosAv
+    ca:=PosCa
+    buscarF(ft,av,ca)
+    Informar('floresTotales ', ft)
+      
+  fin
+variables
+  R1: robot1
+  R2: robot1
+  R3: robot1
+  RC: robot2
+comenzar
+  AsignarArea(R1, ar1)
+  AsignarArea(R2, ar2)
+  AsignarArea(R3, ar3)
+  AsignarArea(RC, arc)
+  AsignarArea(R1, depo)
+  AsignarArea(R2, depo)
+  AsignarArea(R3, depo)
+  AsignarArea(RC, depo)
+  Iniciar(R1, 1,1)
+  Iniciar(R2, 8,1)
+  Iniciar(R3, 15,1)
+  Iniciar(RC, 22,1)
+fin

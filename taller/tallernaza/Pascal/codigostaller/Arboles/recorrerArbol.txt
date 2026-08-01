@@ -1,0 +1,13 @@
+procedure recorrerArbol (a: arbol);
+
+begin
+
+  if (a <> nil) then begin
+
+    {Agregar que hace mientras lo recorre}
+    recorrerArbol(a^.hi);
+
+    recorrerArbol(a^.hd);
+  end;
+
+end;

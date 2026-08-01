@@ -1,0 +1,170 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso izquierda
+  comenzar
+    derecha
+    derecha
+    derecha
+  fin
+  proceso juntarF(ES f :numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso juntarP(ES p :numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel 
+      p:=p+1
+  fin
+  proceso escalon(E tarea: numero; E alto:numero ; E ancho:numero ; ES f:numero; ES p:numero)
+  variables
+    aux:numero
+  comenzar
+    aux:=0
+    si tarea =1
+      repetir alto
+        juntarF(aux)
+        mover
+      derecha
+      repetir ancho-1
+        juntarF(aux)
+        mover
+      juntarF(aux)
+      mover
+      izquierda
+      f:=f+aux
+    sino
+      si tarea =2
+        repetir alto
+          juntarP(aux)
+          mover
+        derecha
+        repetir ancho-1
+          juntarP(aux)
+          mover
+        juntarP(aux)
+        mover
+        izquierda
+        p:=p+aux
+  fin
+  proceso depositar(E f:numero; E p:numero; E av:numero; E ca:numero)
+  comenzar
+    si f>0
+      repetir f
+        BloquearEsquina(99,99)
+        Pos(99,99)
+        depositarFlor
+        Pos(av,ca)
+        LiberarEsquina(99,99)
+    si p>0
+      repetir p
+        BloquearEsquina(98,98)
+        Pos(98,98)
+        depositarPapel
+        Pos(av,ca)
+        LiberarEsquina(98,98)
+  fin
+areas
+  aj: AreaP (1,1,1,1)
+  depF:AreaC(99,99,99,99)
+  depP:AreaC(98,98,98,98)
+  ar1 :AreaP(2,1,12,15)
+  ar2: AreaP(32,1,42,15)
+  ar3: AreaP(62,1,72,15)
+robots
+  robot robot1
+  variables
+    id,f,p,alto,ancho,tarea,av,ca:numero
+  comenzar
+    alto:=4
+    ancho:=3
+    RecibirMensaje(id,RJ)
+    repetir 3
+      RecibirMensaje(tarea,RJ)
+      escalon(tarea,alto,ancho,f,p)
+    av:=PosAv
+    ca:=PosCa
+    depositar(f,p,av,ca)
+    EnviarMensaje(id,RJ)
+    EnviarMensaje(f,RJ)
+    EnviarMensaje(p,RJ)
+  fin
+  robot robot2
+  variables
+    id,tarea,f,p,ftot,ptot,av,ca:numero
+  comenzar
+    ftot:=0
+    ptot:=0
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+    repetir 3
+      Random(tarea,1,2)
+      EnviarMensaje(tarea,R1)
+      Random(tarea,1,2)
+      EnviarMensaje(tarea,R2)
+      Random(tarea,1,2)
+      EnviarMensaje(tarea,R3)
+    repetir 3
+      RecibirMensaje(id,*)
+      si id=1
+        RecibirMensaje(f,R1)
+        ftot:=ftot+f
+        RecibirMensaje(p,R1)
+        ptot:=ptot+p
+      sino 
+        si id =2
+          RecibirMensaje(f,R2)
+          ftot:=ftot+f
+          RecibirMensaje(p,R2)
+          ptot:=ptot+p
+        sino
+          RecibirMensaje(f,R3)
+          ftot:=ftot+f
+          RecibirMensaje(p,R3)
+          ptot:=ptot+p
+    av:=PosAv
+    ca:=PosCa
+    si ftot>ptot
+      Pos(99,99)
+      repetir ftot
+        tomarFlor
+      Pos(av,ca)
+    sino  
+      Pos(98,98)
+      repetir ptot
+        tomarpapel
+      Pos(av,ca)  
+    Informar('floress ',ftot) 
+    Informar('papeless ',ptot)
+  fin
+variables
+  R1: robot1
+  R2: robot1
+  R3: robot1
+  RJ: robot2
+comenzar
+  AsignarArea(RJ, aj)
+  AsignarArea(R1,ar1)
+  AsignarArea(R2,ar2)
+  AsignarArea(R3,ar3)
+  AsignarArea(RJ,depP)
+  AsignarArea(RJ,depF)
+  AsignarArea(R1,depP)
+  AsignarArea(R1,depF)
+  AsignarArea(R2,depP)
+  AsignarArea(R2,depF)
+  AsignarArea(R3,depP)
+  AsignarArea(R3,depF)
+  Iniciar(RJ, 1,1)
+  Iniciar(R1, 2,1)
+  Iniciar(R2, 32,1)
+  Iniciar(R3, 62,1)
+fin

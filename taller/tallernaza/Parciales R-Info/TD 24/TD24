@@ -1,0 +1,132 @@
+programa ejemploTD
+procesos
+  proceso depositarF(ES f:numero)
+  comenzar
+    si ~HayFlorEnLaEsquina
+      si HayFlorEnLaBolsa
+        depositarFlor
+        f:=f+1 
+  fin
+  proceso depositarP(ES p:numero)
+  comenzar
+    si ~HayPapelEnLaEsquina
+      si HayPapelEnLaBolsa
+        depositarPapel
+        p:=p+1
+  fin
+  proceso recorrerAvenida(ES f:numero; E avFlo:numero)
+  variables
+    av,ca:numero
+  comenzar
+    repetir 99
+      depositarF(f)
+      mover
+    depositarF(f)
+  fin
+  proceso recorrerCalle(ES p:numero; E avFlo:numero)
+  variables
+    av,ca:numero
+  comenzar 
+    av:=PosAv
+    ca:=PosCa
+    mientras av <99
+      si(av < (avFlo-1))
+        depositarP(p)
+        mover
+        av:=av+1
+      sino
+        depositarP(p)
+        BloquearEsquina(avFlo,ca)
+        mover
+        depositarP(p)
+        mover 
+        LiberarEsquina(avFlo,ca)
+        av:=av+2
+    mover
+    depositarP(p)   
+  fin
+areas
+  cj: AreaP(1,1,1,1)
+  c2:AreaP(1,2,1,2)
+  cflo: AreaPC (2,1,35,100)
+  c8: AreaP(1,8,100,8)
+  c15: AreaP(1,15,100,15)
+robots
+  robot robot1
+  variables
+    id,avFlo,caFlo,avini,caini,objeto:numero
+    ok: boolean
+  comenzar
+    objeto:=0
+    RecibirMensaje(id,RJ)
+    si (id=1)
+      mientras HayFlorEnLaEsquina
+        tomarFlor
+      avini:=PosAv
+      caini:=PosCa
+      caFlo:=1
+      RecibirMensaje(avFlo,RJ)
+      Pos(avFlo,caFlo)
+      recorrerAvenida(objeto,avFlo)
+    sino
+      mientras HayPapelEnLaEsquina
+        tomarPapel 
+      RecibirMensaje(avFlo,RJ)
+      derecha
+      recorrerCalle(objeto,avFlo)
+    EnviarMensaje(id,RJ)
+    EnviarMensaje(objeto,RJ)
+    RecibirMensaje(ok,RJ)
+    si ok=V
+      Pos(avini,caini)
+  fin
+  robot robot2
+  variables
+    avFlorero,id,objeto,ganador,objganador:numero
+  comenzar
+    EnviarMensaje(1,RF)
+    EnviarMensaje(2,RP1)
+    EnviarMensaje(3,RP2)
+    Random(avFlorero,2,35)
+    EnviarMensaje(avFlorero,RF)
+    EnviarMensaje(avFlorero,RP1)
+    EnviarMensaje(avFlorero,RP2)
+    RecibirMensaje(id,*)
+    RecibirMensaje(objganador,*)
+    ganador:=id
+    repetir 2
+      RecibirMensaje(id,*)
+      RecibirMensaje(objeto,*)
+    si ganador=1
+      EnviarMensaje(V,RF)
+      EnviarMensaje(F,RP1)
+      EnviarMensaje(F,RP2)
+    sino
+      si ganador=2  
+        EnviarMensaje(F,RF)
+        EnviarMensaje(V,RP1)
+        EnviarMensaje(F,RP2)
+      sino
+        EnviarMensaje(F,RF)
+        EnviarMensaje(F,RP1)
+        EnviarMensaje(V,RP2) 
+    Informar('cantidad sembrada por ganador ', objganador)
+  fin
+variables
+  RF: robot1
+  RP1: robot1
+  RP2: robot1
+  RJ:robot2
+comenzar 
+  AsignarArea(RP1, cflo)
+  AsignarArea(RP2, cflo)
+  AsignarArea(RF, cflo)
+  AsignarArea(RF, c2)
+  AsignarArea(RP1, c8)
+  AsignarArea(RP2, c15)
+  AsignarArea(RJ, cj)
+  Iniciar(RF, 1,2)
+  Iniciar(RP1,1,8 )
+  Iniciar(RP2, 1,15)
+  Iniciar(RJ,1,1)
+fin

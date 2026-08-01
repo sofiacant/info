@@ -1,0 +1,120 @@
+programa ejemploT1{12-06-2023}
+procesos
+  proceso juntar(ES f:numero; ES p:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:=p+1
+  fin
+  proceso cuadrado(ES f: numero;ES p:numero;E id:numero)
+  variables
+    cab,esb:numero
+  comenzar
+    si id=2
+      repetir 3
+        juntar(f,p)
+        mover
+      cab:=PosCa +1
+      esb:=PosAv
+      juntar(f,p)
+      BloquearEsquina(esb,cab)
+      mover
+      derecha
+      juntar(f,p)
+      mover
+      LiberarEsquina(esb,cab)
+      repetir 3
+        juntar(f,p) 
+        mover
+      repetir 2 
+        derecha
+        repetir 4
+          juntar(f,p) 
+          mover 
+      derecha
+    sino
+      si id=1
+        repetir 2
+          repetir 4
+            juntar(f,p) 
+            mover
+          derecha
+        repetir 3
+          juntar(f,p)
+          mover
+        cab:= PosCa -1
+        esb:=PosAv
+        BloquearEsquina(esb,cab)
+        mover
+        juntar(f,p)
+        derecha
+        mover
+        LiberarEsquina(esb,cab)
+        repetir 3
+          juntar(f,p)
+          mover
+        derecha
+  fin
+areas
+  ciudad: AreaPC (5,7,40,15)
+  ar1:AreaP(2,2,2,2)
+  ar2:AreaP(3,3,3,3)
+  afis: AreaP(1,1,1,1)
+robots
+  robot robot1
+  variables
+    av,ca,f,p,id,avr2:numero
+    ok:boolean
+  comenzar
+    RecibirMensaje(id,RF)
+    si id=1
+      Pos(5,11)
+      av:=PosAv
+      ca:=PosCa
+    sino
+      Pos(9,7)
+      av:=PosAv
+      ca:=PosCa 
+    repetir 3
+      cuadrado(f,p,id)
+      EnviarMensaje(id,RF)
+      RecibirMensaje(ok,RF)
+      av:=av+10
+      Pos(av,ca)
+  fin
+
+  robot robot3
+  variables
+    id,primero:numero
+  comenzar
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    repetir 3
+      RecibirMensaje(id,*)
+      primero:=id
+      si id=1
+        RecibirMensaje(id,R2)
+      sino
+        si id=2
+          RecibirMensaje(id,R1)
+      Informar('stop cuadrado llego el ',primero)
+      EnviarMensaje(V,R1)
+      EnviarMensaje(V,R2)
+  fin
+variables
+  R1: robot1
+  R2: robot1
+  RF: robot3
+comenzar
+  AsignarArea(R1, ciudad)
+  AsignarArea(R2, ciudad)
+  AsignarArea(R1, ar1)
+  AsignarArea(R2, ar2)
+  AsignarArea(RF,afis)
+  Iniciar(R2, 3,3)
+  Iniciar(R1, 2,2)
+  Iniciar(RF, 1,1)
+fin

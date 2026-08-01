@@ -1,0 +1,65 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un cÃƒÂ³digo de ejemplo que implementa un
+proceso que recibe un nÃƒÂºmero de avenida como parÃƒÂ¡metro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso juntarF(ES f: numero; ES esf: numero)
+  comenzar
+    si (~HayFlorEnLaEsquina)
+      esf:= esf + 1
+    sino
+      mientras (HayFlorEnLaEsquina)
+        tomarFlor
+        f:=f+1
+  fin 
+  proceso DepositarFlores(ES f: numero)
+  comenzar
+    mientras (HayFlorEnLaBolsa)
+      depositarFlor
+  fin
+  proceso recorrerAvenida(ES f: numero; ES esf:numero)
+  variables
+    avIni:numero
+    caIni:numero
+    contadorVueltas:numero
+  comenzar
+    avIni:=PosAv
+    caIni:=PosCa
+    contadorVueltas:=1
+    repetir 3
+      repetir 99
+        juntarF(f,esf)
+        mover
+      juntarF(f,esf)
+      DepositarFlores(f) 
+      si (contadorVueltas < 3)
+        contadorVueltas:=contadorVueltas +1
+        avIni:=avIni+2
+        Pos(avIni,caIni)
+    Informar('Flores ', f )
+    Informar(' ESquinas sin Flores ', esf)
+  fin
+areas
+  calle1: AreaP(1,1,1,100)
+  calle3: AreaP(3,1,3,100)
+  calle5: AreaP(5,1,5,100)
+robots
+  robot robot1
+  variables
+    f:numero
+    esf:numero
+  comenzar
+    f:=0
+    esf := 0
+    recorrerAvenida(f,esf)
+  fin
+variables
+  R_info: robot1
+comenzar
+  AsignarArea(R_info, calle1)
+  AsignarArea(R_info, calle3)
+  AsignarArea(R_info, calle5)
+  Iniciar(R_info, 1,1)
+fin

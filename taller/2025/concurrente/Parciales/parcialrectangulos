@@ -1,0 +1,141 @@
+programa ejparcial
+procesos
+  proceso enviarIDs
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+  fin
+  proceso enviarDimensiones
+  variables
+    alto,ancho:numero
+  comenzar
+    Random(alto,1,19)
+    Random(ancho,1,19)
+    EnviarMensaje(alto,r1)
+    EnviarMensaje(ancho,r1)
+    Random(alto,1,19)
+    Random(ancho,1,19)
+    EnviarMensaje(alto,r2)
+    EnviarMensaje(ancho,r2)
+  fin
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras (HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:=papeles+1
+  fin 
+  proceso depositarFlores(ES flores:numero; E av:numero; E ca:numero)
+  comenzar
+    BloquearEsquina(21,21)
+    Pos(21,21)
+    depositarFlor
+    flores:=flores-1
+    Pos(av,ca)
+    LiberarEsquina(21,21)
+  fin
+  proceso depositarPapeles(ES papeles: numero; E av:numero; E ca:numero)
+  comenzar
+    BloquearEsquina(22,22)
+    Pos(22,22)
+    depositarPapel
+    papeles:=papeles-1
+    Pos(av,ca)
+    LiberarEsquina(22,22)
+  fin
+  proceso rectangulo(ES flores:numero; ES papeles:numero; E ancho:numero; E alto:numero; E id:numero)
+  variables
+    av,ca:numero
+    cant:numero
+  comenzar
+    repetir 2
+      repetir alto
+        juntarPapeles(papeles)
+        juntarFlores(flores)
+        mover
+      av:=PosAv
+      ca:=PosCa
+      cant:=flores+papeles
+      EnviarMensaje(id,rc)
+      EnviarMensaje(cant,rc)
+      mientras(flores > 0)
+        depositarFlores(flores,av,ca)
+      mientras(papeles > 0)
+        depositarPapeles(papeles,av,ca)
+      derecha
+      repetir ancho
+        juntarPapeles(papeles)
+        juntarFlores(flores)
+        mover
+      derecha
+      cant:=flores+papeles
+      EnviarMensaje(id,rc)
+      EnviarMensaje(cant,rc)
+      av:=PosAv
+      ca:=PosCa
+      mientras(flores > 0)
+        depositarFlores(flores,av,ca)
+      mientras(papeles > 0)
+        depositarPapeles(papeles,av,ca)
+  fin
+areas
+  esqFlores: AreaPC (21,21,21,21)
+  esqPapeles: AreaPC(22,22,22,22)
+  area1: AreaP(1,1,20,20)
+  area2: AreaP (21,1,40,20)
+  areaCoord: AreaP(23,23,23,23)
+robots
+  robot rtrabajador
+  variables
+    alto,ancho:numero
+    flores,papeles:numero
+    miID:numero
+  comenzar
+    flores:=0
+    papeles:=0
+    RecibirMensaje(miID,rc)
+    RecibirMensaje(alto,rc)
+    RecibirMensaje(ancho,rc)
+    rectangulo(flores,papeles,ancho,alto,miID)
+  fin
+  robot rcoordinador
+  variables
+    id:numero
+    cant,cant1,cant2:numero
+    r1,r2:numero
+  comenzar
+    enviarIDs    
+    enviarDimensiones
+    repetir 8
+      RecibirMensaje(id,*)
+      si(id=1)
+        RecibirMensaje(cant,r1)
+        cant1:=cant1+cant
+      sino
+        RecibirMensaje(cant,r2)
+        cant2:=cant2+cant
+    si(cant1>cant2)
+      Informar('Ganador',1)
+    sino
+      Informar('Ganador',2)
+  fin  
+variables
+  r1,r2:rtrabajador
+  rc:rcoordinador
+comenzar
+  AsignarArea(r1,area1)
+  AsignarArea(r2,area2)
+  AsignarArea(r1,esqFlores)
+  AsignarArea(r2,esqFlores)
+  AsignarArea(r1,esqPapeles)
+  AsignarArea(r2,esqPapeles)
+  AsignarArea(rc,areaCoord)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 21,1)
+  Iniciar(rc, 23,23)
+fin

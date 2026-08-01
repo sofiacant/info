@@ -1,0 +1,11 @@
+procedure leerVector (var v: vector);
+var
+  i: integer;
+
+begin
+  for i := 1 to dimF do begin
+    write('Ingrese el valor: '); {valor, numero, peso, nombre, etc}
+    readln(v[i]);
+    writeln('_________________________________________________________');
+  end;
+end;

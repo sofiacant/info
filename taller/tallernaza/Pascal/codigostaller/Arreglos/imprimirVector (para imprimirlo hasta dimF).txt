@@ -1,0 +1,9 @@
+procedure imprimirVector (v: vector);
+var
+  i: integer;
+
+begin
+  for i := 1 to (dimF - 1) do
+    write (v[i], ', ');
+  writeln(v[dimF], '.');
+end;

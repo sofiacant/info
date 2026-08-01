@@ -1,0 +1,11 @@
+function buscarDesordenado (v: vector; dimL: integer, dato: {*****}): integer; {Devuelve la posicion del elemento, o, de no encontrarse, "-1"}
+var
+  pos:integer;
+
+begin
+  pos:=1;
+  while ((pos <= dimL) and (v[pos] <> dato) ) do pos:= pos + 1;
+
+  if (pos = dimL + 1) then pos := -1;
+  buscar := pos;
+end;

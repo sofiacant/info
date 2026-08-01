@@ -1,0 +1,84 @@
+programa ejemplo
+procesos
+  proceso contarFlores(ES flores: numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso contarPapeles(ES papeles:numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      papeles:=papeles+1
+  fin
+  proceso cantidadEscalones(E flores:numero; E papeles: numero ; ES cantEsc:numero)
+  comenzar
+    si (flores > papeles)
+      cantEsc:=cantEsc+1
+  fin
+  proceso contarEsquina(ES flores:numero; ES papeles:numero)
+  comenzar
+    contarFlores(flores)
+    contarPapeles(papeles)
+  fin
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso hacerEscalon(E ancho:numero; E alto:numero ; cantEsc:numero)
+  variables
+    flores,papeles:numero
+  comenzar
+    flores:=0
+    papeles:=0
+    repetir alto
+      contarEsquina(flores,papeles)
+      mover
+    contarEsquina(flores,papeles) 
+    derecha
+    mover
+    cantidadEscalones(flores,papeles,cantEsc)
+    izquierda
+  fin
+  proceso hacerEscalera
+  variables
+    alto:numero
+  comenzar
+    Random(alto,1,5)
+    repetir 4
+      hacerEscalon(1,alto,cantEsc)
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  variables
+    cantEsc:numero
+  comenzar
+    cantEsc:=0
+    hacerEscalera(cantEsc)
+    EnviarMensaje(cantEsc, rJefe)
+  fin
+  robot robotJefe
+  variables
+    cantEsc:numero
+  comenzar
+    RecibirMensaje()
+  fin
+variables
+  r1: robot1
+  r2: robot1
+  r3: robot1
+  rJefe: robotJefe
+comenzar
+  AsignarArea(rJefe, ciudad)
+  AsignarArea(r1, ciudad)
+  AsignarArea(r2, ciudad)
+  AsignarArea(r3, ciudad)
+  Iniciar(rJefe, 1,1)
+  Iniciar(r1, 2,1)
+  Iniciar(r2, 7,1)
+  Iniciar(r3, 12,1)
+fin

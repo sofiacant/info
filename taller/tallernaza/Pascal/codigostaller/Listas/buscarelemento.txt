@@ -1,0 +1,10 @@
+procedure buscarElemento (l: lista, dato: {*****});  {Solo lo busca, no hace nada cuando lo encuentra}
+begin
+  while ((l <> nil) and (l^.dato <> dato)) do begin
+    l := l^.sig;
+  end;
+
+  if (l <> nil) then begin
+    {Aca escribi que hace si encontró el dato}
+  end;
+end;

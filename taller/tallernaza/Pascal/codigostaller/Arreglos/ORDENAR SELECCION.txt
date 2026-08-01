@@ -1,0 +1,16 @@
+procedure seleccion(var v:vector; dimL:integer);
+var
+i,j,pos:integer; 
+item:elemento;
+
+begin 
+for i:= 1 to dimL-1 do begin
+  pos:=i;
+  for j:= i+1 to dimL do
+     if(v[j]< v[pos]) then pos:=j;
+  item:=v[pos];
+  v[pos]:=v[i];
+  v[i]:=item;
+  end;
+end;
+

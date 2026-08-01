@@ -1,0 +1,113 @@
+programa ejemploTB
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso recorrerAvenidaR1(ES f: numero; E caCruce:numero; E av :numero; E ca:numero;E id:numero) 
+  comenzar
+    mientras (ca < 60)
+      si ca = (caCruce-1)
+        juntarF(f)
+        BloquearEsquina(av,caCruce)
+        mover
+        EnviarMensaje(id,RFS)
+        juntarF(f)
+        mover
+        LiberarEsquina(av,caCruce)
+        ca:=ca+2
+      sino
+        juntarF(f)
+        mover
+        ca:= ca+1
+  fin
+  proceso recorrerAvenidaR2(ES f : numero ; E caCruce:numero; E av:numero; E avR1:numero;E id:numero)
+  comenzar
+    mientras av< 60
+      si av = (avR1-1)
+        juntarF(f)
+        BloquearEsquina(avR1,caCruce)
+        mover
+        EnviarMensaje(id,RFS)
+        juntarF(f)
+        mover
+        LiberarEsquina(avR1,caCruce)
+        av:=av+2
+      sino 
+        juntarF(f)
+        mover
+        av:=av+1
+  fin
+areas
+  {ciudad: AreaC (1,1,100,100)}
+  area6:AreaP(6,1,6,60)
+  afis:AreaP(100,100,100,100)
+  areax:AreaPC(1,2,60,50)
+robots
+  robot robot1
+  variables
+    id,f,av,ca,caCruce:numero
+  comenzar
+    f:=0
+    RecibirMensaje(id,RFS)
+    RecibirMensaje(caCruce,RFS)
+    av:=PosAv
+    ca:=PosCa
+    recorrerAvenidaR1(f,caCruce,av,ca,id)
+    {Informar(PosAv,PosCa)}
+    EnviarMensaje(id,RFS)
+    EnviarMensaje(f,RFS)
+  fin
+  robot robot2
+  variables
+    id,f,av,ca,caCruce,avR1:numero 
+  comenzar
+    f:=0
+    avR1:=6
+    RecibirMensaje(id,RFS)
+    RecibirMensaje(caCruce,RFS)
+    av:=PosAv
+    Pos(av,caCruce)
+    derecha
+    recorrerAvenidaR2(f,caCruce,av,avR1,id)
+    {Informar(PosAv,PosCa)}
+    EnviarMensaje(id,RFS)
+    EnviarMensaje(f,RFS)
+    
+  fin
+  robot robot3
+  variables
+    id,ca2,f,cru1,otroID:numero
+  comenzar
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    Random(ca2,2,50)
+    EnviarMensaje(ca2,R1)
+    EnviarMensaje(ca2,R2)
+    RecibirMensaje(id,*)
+    cru1:=id
+    RecibirMensaje(id,*)
+    repetir 2
+      RecibirMensaje(otroID, *)
+      RecibirMensaje(f, *)
+      si otroID = cru1
+        Informar('primero ', cru1)
+        Informar('cantFlores', f)
+        
+    
+    
+  fin
+variables
+  R1: robot1
+  R2: robot2
+  RFS: robot3
+comenzar
+  AsignarArea(R1, area6)
+  AsignarArea(R2, areax)
+  AsignarArea(RFS, afis)
+  Iniciar(R1, 6,1)
+  Iniciar(R2, 1,2)
+  Iniciar(RFS, 100,100)
+fin

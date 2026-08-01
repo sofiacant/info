@@ -1,0 +1,11 @@
+procedure borrarPosicion (var v: vector; var dimL: integer; pos: integer);  
+begin
+  if ((pos >= 1) and (pos <= dimL))then begin
+    
+    for i := pos to (dimL - 1) do v[i]:= v[i + 1];  
+    dimL := dimL - 1;
+  end
+
+  else writeln('La posicion ingresada no es valida');
+
+end;

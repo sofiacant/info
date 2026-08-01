@@ -1,0 +1,13 @@
+procedure AgregarAtras(var l:lista; var ult:lista; elem:****);
+var
+ nue:lista;
+ begin
+  new(nue);               {Creo un nodo}
+  nue^.dato:=elem;        {Cargo el dato}
+  nue^.sig:=nil;          {Inicializo enlace en nil}
+  if(l <> nil)then      {Si la lista no está vacía}
+     ult^.sig:=nue          {Realizo enlace con el último}
+     else                 {Si la lista está vacía}
+       l:=nue;            {Actualizo el inicio}
+  ult:=nue;               {Actualizo el último}
+end;

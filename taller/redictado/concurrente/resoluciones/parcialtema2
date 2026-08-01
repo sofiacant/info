@@ -1,0 +1,158 @@
+programa parcialtema2barrera
+procesos
+  proceso juntarFlores
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+  fin
+  proceso juntarPapeles
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+  fin
+  proceso enviarIDS
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+    EnviarMensaje(4,r4)
+  fin
+  proceso enviarFin
+  comenzar
+    EnviarMensaje(V,r1)
+    EnviarMensaje(V,r2)
+    EnviarMensaje(V,r3)
+    EnviarMensaje(V,r4)
+  fin
+
+areas
+  areaDescanso: AreaPC (20,6,25,12)
+  areaMeta: AreaPC (40,6,40,13)
+  areaFiscal: AreaP (20,15,20,15)
+  areaLargada: AreaPC (10,6,19,12)
+  areaCarreraP: AreaPC (26,6,45,12)
+robots
+  robot corredor
+  variables
+    id,av,ca,pasos:numero
+    ok:boolean
+  comenzar
+    RecibirMensaje(id,rf)
+    derecha
+    av:=10
+    ca:=PosCa
+    {ETAPA 1: JUNTO FLORES HASTA AV 20}
+    mientras(av<20)
+      EnviarMensaje(id,rf)
+      EnviarMensaje(V,rf)
+      RecibirMensaje(pasos,rf)
+      repetir pasos
+        si(av<20)    
+          juntarFlores
+          mover
+          av:=av+1
+      juntarFlores
+    EnviarMensaje(id,rf)
+    EnviarMensaje(F,rf) 
+    RecibirMensaje(ok,rf) {barrera para que todos lelguen}  
+    Pos(25,ca)
+    av:=25
+    mientras(av<40)
+      EnviarMensaje(id,rf)
+      EnviarMensaje(V,rf)
+      RecibirMensaje(pasos,rf)
+      repetir pasos
+        si(av<40)
+          juntarPapeles
+          mover
+          av:=av+1 
+        juntarPapeles
+    EnviarMensaje(id,rf)
+    EnviarMensaje(F,rf)
+    RecibirMensaje(ok,rf)
+  fin
+  robot fiscal
+  variables
+    pasos,id:numero
+    cont:numero
+    ok:boolean
+    win1,win:numero
+  comenzar
+    win1:=0
+    win:=0
+    cont:=0
+    enviarIDS
+    repetir 2
+      win1:=win
+      mientras(cont<4)
+        RecibirMensaje(id,*)
+        si(id = 1)
+          RecibirMensaje(ok,r1)
+          si(ok)
+            Random(pasos,1,3)
+            EnviarMensaje(pasos,r1)
+          sino
+            si(cont=0)
+              win:=id
+            cont:=cont+1
+        sino
+          si(id=2)
+            RecibirMensaje(ok,r2)
+            si(ok)
+              Random(pasos,1,3)
+              EnviarMensaje(pasos,r2)
+            sino
+              si(cont=0)
+                win:=id
+              cont:=cont+1
+          sino
+            si(id=3)
+              RecibirMensaje(ok,r3)
+              si(ok)
+                Random(pasos,1,3)
+                EnviarMensaje(pasos,r3)
+              sino
+                si(cont=0)
+                  win:=id
+                cont:=cont+1
+            sino
+              RecibirMensaje(ok,r4)
+              si(ok)
+                Random(pasos,1,3)
+                EnviarMensaje(pasos,r4)
+              sino
+                si(cont=0)
+                  win:=id
+                cont:=cont+1
+      enviarFin
+      cont:=0       
+    Informar('ganador primer etapa', win1)
+    Informar('ganador segunda etapa', win)
+  fin
+variables
+  r1,r2,r3,r4: corredor
+  rf:fiscal
+comenzar
+  AsignarArea(rf,areaFiscal)
+  AsignarArea(r1,areaLargada)
+  AsignarArea(r1,areaDescanso)
+  AsignarArea(r1,areaMeta)
+  AsignarArea(r2,areaLargada)
+  AsignarArea(r2,areaDescanso)
+  AsignarArea(r2,areaMeta)
+  AsignarArea(r3,areaLargada)
+  AsignarArea(r3,areaDescanso)
+  AsignarArea(r3,areaMeta)
+  AsignarArea(r4,areaLargada)
+  AsignarArea(r4,areaDescanso)
+  AsignarArea(r4,areaMeta)
+  AsignarArea(r1, areaCarreraP)
+  AsignarArea(r2, areaCarreraP)
+  AsignarArea(r3, areaCarreraP)
+  AsignarArea(r4, areaCarreraP)
+  Iniciar(r1, 10,6)
+  Iniciar(r2, 10,8)
+  Iniciar(r3, 10,10)  
+  Iniciar(r4, 10,12)
+  Iniciar(rf, 20,15)
+fin

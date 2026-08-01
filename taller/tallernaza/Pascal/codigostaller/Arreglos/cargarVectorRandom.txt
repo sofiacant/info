@@ -1,0 +1,7 @@
+procedure cargarVectorRandom(var v:vector);
+var
+  i: integer;
+begin
+  randomize;
+  for i := 1 to dimF do v[i] := random({*****});
+end;

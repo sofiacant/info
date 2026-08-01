@@ -1,0 +1,122 @@
+programa ej3recolectores
+procesos
+  proceso enviarIDs
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)
+  fin
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:= papeles+1
+  fin
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso recorrerAvEtapa1(E av:numero; ES flores:numero)
+  comenzar
+    repetir 8
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+  fin
+  proceso recorrerAvenidas(E av:numero; ES papeles:numero)
+  comenzar
+    repetir 3
+      Pos(av,2)
+      repetir 8
+        juntarPapeles(papeles)
+        mover
+      juntarPapeles(papeles)
+      av:=av+1
+  fin
+  proceso actualizarMin(E flores:numero;E id:numero; ES fmin:numero; ES idmin:numero)
+  comenzar
+    si (flores<fmin)
+      fmin:=flores
+      idmin:=id
+  fin
+  proceso enviarIDMin(E idmin:numero)
+  comenzar
+    EnviarMensaje(idmin,r1)
+    EnviarMensaje(idmin,r2)
+    EnviarMensaje(idmin,r3)
+  fin
+areas
+  area1: AreaPC (5,2,5,10)
+  area2: AreaPC (6,2,6,10)
+  area3: AreaPC (7,2,7,10)
+  areaCoord: AreaP (1,1,1,1)
+  areafin: AreaPC(8,1,10,1)
+robots
+  robot recolector
+  variables
+    flores:numero
+    papeles:numero
+    miID,idmin:numero
+    av:numero
+  comenzar
+    flores:=0
+    RecibirMensaje(miID,rc)
+    av:=PosAv
+    recorrerAvEtapa1(av,flores)
+    EnviarMensaje(miID,rc)
+    EnviarMensaje(flores,rc)
+    RecibirMensaje(idmin,rc)
+    si(idmin = miID)
+      papeles:=0
+      recorrerAvenidas(5,papeles)
+      EnviarMensaje(papeles,rc)
+    sino
+      Pos(av+3,1)
+  fin
+  robot rcoordinador
+  variables
+    flores,papeles,id:numero
+    fmin,idmin:numero
+  comenzar
+    idmin:=4
+    fmin:=999
+    enviarIDs
+    repetir 3
+      RecibirMensaje(id,*)
+      si(id=1)
+        RecibirMensaje(flores,r1)
+      sino
+        si(id=2)
+          RecibirMensaje(flores,r2)
+        sino
+          RecibirMensaje(flores,r3)
+      actualizarMin(flores,id,fmin,idmin)
+    Informar(idmin){prueba}
+    enviarIDMin(idmin)
+    RecibirMensaje(papeles,*) 
+    Informar(papeles)
+  fin
+variables
+  r1,r2,r3: recolector
+  rc:rcoordinador
+comenzar
+  AsignarArea(r1, area1)
+  AsignarArea(r1, area2)
+  AsignarArea(r1, area3)
+  AsignarArea(r1,areafin)
+  AsignarArea(r2, area1)
+  AsignarArea(r2, area2)
+  AsignarArea(r2, area3)
+  AsignarArea(r2,areafin)
+  AsignarArea(r3, area1)
+  AsignarArea(r3, area2)
+  AsignarArea(r3, area3)
+  AsignarArea(r3,areafin)
+  AsignarArea(rc,areaCoord)
+  Iniciar(rc,1,1)
+  Iniciar(r1, 5,2)
+  Iniciar(r2, 6,2)
+  Iniciar(r3, 7,2)
+fin

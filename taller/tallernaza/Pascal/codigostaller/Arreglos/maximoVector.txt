@@ -1,0 +1,10 @@
+procedure maximoVector (v: vector; var max: {*****}; var pos: integer); {Devuelve el maximo y su posicion en el arreglo} {Enviar "max" en un numero muy grande}
+var
+  i: integer;
+Begin
+  for i := 1 to dimL do begin
+    if (v[i] > max) then begin
+       max := v[i];
+       pos := i;
+   end;
+end;

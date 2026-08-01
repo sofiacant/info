@@ -1,0 +1,7 @@
+procedure imprimirLista (l:lista);
+begin
+  while (l <> nil) do begin
+      write (l^.dato, '    ');
+      l := l^.sig;
+    end; 
+end;

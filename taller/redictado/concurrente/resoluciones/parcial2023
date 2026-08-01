@@ -1,0 +1,158 @@
+programa ejemplo
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso juntarTodo(ES cant:numero)
+  comenzar
+    Pos(49,49)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      cant:=cant+1
+    Pos(50,50)
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      cant:=cant+1
+  fin
+  proceso enviarIDS
+  comenzar
+    EnviarMensaje(1,rp1)
+    EnviarMensaje(1,rf1)    
+    EnviarMensaje(2,rp2)
+    EnviarMensaje(2,rf2)
+  fin
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:=papeles+1
+  fin
+  proceso depositarEsquina49(ES flores:numero)
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    repetir flores
+      BloquearEsquina(49,49)
+      Pos(49,49)
+      depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(49,49)
+  fin
+  proceso depositarEsquina50(ES papeles:numero)
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    repetir papeles
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      depositarPapel
+      Pos(av,ca)
+      LiberarEsquina(50,50)
+  fin
+  proceso recorrerAvenidaPapeles(ES papeles:numero; E pasos:numero)
+  variables
+    av,ca,av2:numero
+  comenzar 
+    repetir pasos
+      juntarPapeles(papeles)
+      mover
+    juntarPapeles(papeles)
+    derecha
+    pasos:=pasos*2
+    repetir pasos 
+      juntarPapeles(papeles)
+      mover
+    juntarPapeles(papeles)
+  fin
+  proceso recorrerAvenidaFlores(ES flores:numero; E pasos:numero)
+  variables
+    av,ca,av2:numero
+  comenzar
+    repetir pasos
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+    izquierda
+    pasos:=pasos*2
+    repetir pasos
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+  fin
+areas
+  area1: AreaP (50,1,66,9)
+  area2: AreaP (50,20,66,29)
+  area3: AreaP (35,1,49,8)
+  area4: AreaP (35,20,49,28)
+  esquina50: AreaPC (50,50,50,50)
+  esquina49: AreaPC (49,49,49,49)
+  areaFiscal: AreaP (1,1,1,1)
+robots
+  robot robotP
+  variables
+    papeles,pasos,id:numero
+  comenzar
+    RecibirMensaje(id,fisc)
+    papeles:=0
+    Random(pasos,4,8)
+    recorrerAvenidaPapeles(papeles,pasos)
+    depositarEsquina50(papeles)
+    EnviarMensaje(V,fisc)
+  fin
+  robot robotF
+  variables
+    flores,pasos,id:numero
+  comenzar
+    RecibirMensaje(id,fisc)
+    Random(pasos,3,7)
+    flores:=0
+    recorrerAvenidaFlores(flores,pasos)
+    depositarEsquina49(flores)
+    EnviarMensaje(V,fisc)
+  fin
+  robot fiscal
+  variables
+    cant:numero
+    ok:boolean
+  comenzar
+    enviarIDS
+    cant:=0
+    repetir 4
+      RecibirMensaje(ok,*)      
+    juntarTodo(cant)
+    Informar('La cantidad total es', cant)
+  fin
+variables
+  rp1,rp2: robotP
+  rf1,rf2: robotF
+  fisc:fiscal
+comenzar
+  AsignarArea(rp1, esquina50)
+  AsignarArea(rp2, esquina50)
+  AsignarArea(fisc, esquina50)
+  AsignarArea(rf1, esquina49)
+  AsignarArea(rf2, esquina49)
+  AsignarArea(fisc, esquina49)
+  AsignarArea(rp1, area1)
+  AsignarArea(rp2,area2)
+  AsignarArea(rf1,area3)
+  AsignarArea(rf2,area4)
+  AsignarArea(fisc,areaFiscal)
+  Iniciar(rp1, 50,1)
+  Iniciar(rp2, 50,20)
+  Iniciar(rf1, 49,1)
+  Iniciar(fisc, 1,1) 
+  Iniciar(rf2, 49,20)
+fin

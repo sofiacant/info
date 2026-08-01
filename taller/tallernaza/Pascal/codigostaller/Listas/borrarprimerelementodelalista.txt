@@ -1,0 +1,9 @@
+procedure borrarElemento (var l:lista);
+var
+  act: lista;
+begin
+  act := l; 
+  l := l^.sig;
+  dispose (act);
+  end;
+end;

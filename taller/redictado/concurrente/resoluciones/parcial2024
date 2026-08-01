@@ -1,0 +1,155 @@
+programa ejemplo
+procesos
+  proceso enviarIDS
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+  fin  
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras(HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:=papeles+1
+  fin
+  proceso idaFlores(ES flores:numero) 
+  comenzar
+    repetir 4
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+  fin
+  proceso vueltaPapeles(ES papeles:numero)
+  comenzar
+    repetir 4
+      juntarPapeles(papeles)
+      mover
+    juntarPapeles(papeles)
+  fin
+  proceso esquinaF(ES flores:numero)
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    BloquearEsquina(6,6)
+    Pos(6,6)
+    si (HayFlorEnLaEsquina)
+      tomarFlor
+    Pos(av,ca)
+    LiberarEsquina(6,6)
+  fin
+  proceso esquinaP(ES papeles:numero)
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    BloquearEsquina(6,6)
+    Pos(6,6)
+    si (HayPapelEnLaEsquina)
+      tomarPapel
+    Pos(av,ca)
+    LiberarEsquina(6,6)
+  fin
+areas
+  areaFiscal: AreaP(1,6,1,6)
+  esquina: AreaPC (6,6,6,6)
+  arear1a: AreaP (1,7,5,7)
+  arear2a: AreaP (1,5,5,5)
+  arear1b: AreaP (7,5,11,5)
+  arear2b: AreaP (7,7,11,7)
+robots
+  robot corredor1
+  variables
+    id,flores,papeles:numero
+  comenzar
+    papeles:=0
+    flores:=0
+    derecha
+    RecibirMensaje(id,rf)
+    idaFlores(flores)
+    esquinaF(flores)
+    Pos(7,5)
+    idaFlores(flores)
+    EnviarMensaje(id,rf)
+    EnviarMensaje(flores,rf)
+    repetir 2
+      derecha
+    vueltaPapeles(papeles)
+    esquinaP(papeles)
+    Pos(5,7)
+    vueltaPapeles(papeles)
+    EnviarMensaje(id,rf)
+    EnviarMensaje(papeles,rf)
+  fin
+  robot corredor2
+  variables
+    id,flores,papeles:numero
+  comenzar
+    flores:=0
+    papeles:=0
+    derecha
+    RecibirMensaje(id,rf)
+    idaFlores(flores)
+    esquinaF(flores)
+    Pos(7,7)
+    idaFlores(flores)
+    EnviarMensaje(id,rf)
+    EnviarMensaje(flores,rf)
+    repetir 2
+      derecha
+    vueltaPapeles(papeles)
+    esquinaP(papeles)
+    Pos(5,5)
+    vueltaPapeles(papeles)  
+    EnviarMensaje(id,rf)
+    EnviarMensaje(papeles,rf)
+  fin
+  robot fiscal
+  variables
+    id,f1,f2,p1,p2:numero
+    ok:boolean
+  comenzar
+    enviarIDS
+    ok:=V
+    repetir 2
+      RecibirMensaje(id,*)
+      si (id=1)
+        RecibirMensaje(f1,r1)
+      sino
+        RecibirMensaje(f2,r2)
+      si (ok)
+        Informar('El que mas flores junto es',id)
+        ok:=F
+    ok:=V
+    repetir 2
+      RecibirMensaje(id,*)
+      si (id=1)
+        RecibirMensaje(p1,r1)
+      sino
+        RecibirMensaje(p2,r2)
+      si(ok)
+        Informar('El que mas papeles junto es ',id)
+  fin
+variables
+  r1: corredor1
+  r2: corredor2
+  rf:fiscal
+comenzar
+  AsignarArea(r1, arear1a)
+  AsignarArea(r1, arear1b)
+  AsignarArea(r1, esquina)
+  AsignarArea(r2, arear2a)
+  AsignarArea(r2, arear2b)
+  AsignarArea(r2, esquina)
+  AsignarArea(rf,areaFiscal)
+  Iniciar(r1, 1,7)
+  Iniciar(r2, 1,5)
+  Iniciar(rf,1,6)
+fin

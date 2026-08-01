@@ -1,0 +1,8 @@
+procedure minimoLista(l: lista; var min: integer);
+begin
+  if (l <>nil) then begin
+     if (l^.dato < min) then
+       min := l^.dato;
+     minimoLista (l^.sig, min);
+  end;
+end;

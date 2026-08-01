@@ -1,0 +1,50 @@
+procedure agregarAtras (var l: lista; dato: registro; var ult: lista);
+var
+   nue: lista;
+begin 
+  new (nue);
+  nue^.dato:= dato;
+  nue^.sig := nil;
+  if (l <> nil) then
+    ult^.sig := nue
+  else
+    l := nue;
+  ult := nue;
+end;
+
+procedure determinarMinimo (var v: vdl; var min: registro);        {vdl = vector de listas}
+var
+   aux: integer;
+   i: integer;
+begin
+     min.tipo:= 9999;
+     for i:= 1 to vdlTam do begin   {vdlTam = constante, tamaño del vector de listas}
+         if ( v[i] <> nil ) then
+            if ( v[i]^.dato.campoOrden < min.campoOrden ) then begin  {Campo orden = campo segun el cual se ordenara la lista} {cambiar "campoOrden" por el nombre particular del campo}
+                min := v[i]^.dato;
+                aux:= i;
+            end;
+     end;
+     if (min.campoOrden {cambiar "campoOrden" por el nombre particular del campo} <> 9999) then
+        v[aux]:=v[aux]^.sig;
+end;
+
+
+procedure mergeAcumulador (v: vdl; var l: lista);
+var
+   minimo, actual: registro;
+   ult: lista;
+   total: integer;
+begin
+     determinarMinimo(v, minimo);
+     while (minimo.tipo <> 9999) do begin
+            total := 0;
+            actual := minimo;
+            while (actual.campoOrden = minimo.campoOrden{cambiar "campoOrden" por el nombre particular del campo}) do begin
+                  total:= total + minimo.campoSecundario{cambiar "campoSecundaio" por el nombre particular del campo};
+                  determinarMinimo(v,minimo);
+            end;
+            actual.campoSecundario{cambiar "campoSecundaio" por el nombre particular del campo}:= total;
+            agregarAtras(l, actual, ult);
+     end;
+end;

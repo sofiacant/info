@@ -1,0 +1,21 @@
+procedure Busquedabinaria(var v:vector; var diml:integer; var pos:integer; var ok:boolean; elem:integer);
+var
+  pri,ult,medio:integer;
+begin
+  pri:=1;
+  ult:=diml;
+  medio:=(pri + ult)div 2;
+  while(pri <= ult)and(elem <>v[medio])do begin 
+    if(elem < v[medio])then
+       ult:=medio -1
+       else
+         pri:= medio +1;
+    medio:=(pri + ult)div 2;
+  end;
+   if(pri <= ult)then begin
+     ok:=true;
+     pos:=medio;
+     end
+     else
+     ok:=false;
+end;

@@ -1,0 +1,6 @@
+procedure recorrerLista (l: lista);
+begin
+  while (l <> nil) do begin
+    l := l^.sig;
+  end;
+end;

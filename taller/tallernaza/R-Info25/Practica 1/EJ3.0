@@ -1,0 +1,68 @@
+programa ejemplo
+procesos
+  proceso izquierda
+  comenzar
+    derecha
+    derecha
+    derecha
+  fin
+  proceso juntarFyP(ES f:numero; ES p:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:=p+1
+    mientras HayFlorEnLaBolsa & HayPapelEnLaBolsa
+      depositarPapel
+      depositarFlor
+  fin
+  proceso Escalon(E lado:numero;  ES total:numero)
+  variables
+    f,p:numero
+  comenzar
+    f:=0
+    p:=0
+    repetir lado
+      juntarFyP(f,p)
+      mover
+    derecha
+    repetir lado-1
+      juntarFyP(f,p)
+      mover
+    juntarFyP(f,p)
+    mover
+    si (p-f  =1)
+      total:=total+1
+    f:=0
+    p:=0
+    izquierda
+  fin
+areas
+  ciudadmini: AreaC (12,6,33,24)
+robots
+  robot robot1
+  variables
+    lado,total:numero
+  comenzar
+    lado:=1
+    total:=0
+    repetir 4
+      Escalon(lado,total)
+      lado:=lado+1
+    Informar('el total es', total)
+    
+  fin
+variables
+  R_info: robot1
+  R2: robot1
+  R3: robot1
+comenzar
+  AsignarArea(R_info, ciudadmini)
+  AsignarArea(R2, ciudadmini)
+  AsignarArea(R3, ciudadmini)
+  Iniciar(R_info, 12,14)
+  Iniciar(R2, 17,10)
+  Iniciar(R3, 22,6)
+fin

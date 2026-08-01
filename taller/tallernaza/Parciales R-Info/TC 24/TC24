@@ -1,0 +1,95 @@
+programa ejemploTC
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso cuadrado(E tam: numero; ES f:numero)
+  comenzar
+    repetir 4
+      repetir tam
+        juntarF(f)
+        mover
+      derecha
+  fin
+  proceso depositar(E f:numero;E av:numero;E ca:numero)
+  comenzar
+    repetir f
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(50,50)
+  fin
+areas
+  depo:AreaPC(50,50,50,50)
+  ar1:AreaP(1,1,6,30)
+  ar2:AreaP(8,1,13,30)
+  ar3:AreaP(15,1,20,30)
+  ai:AreaP(51,1,51,1)
+robots
+  robot robot1
+  variables
+    av,ca,id,f,tam:numero
+    ok: boolean
+  comenzar
+    f:=0
+    av:=PosAv
+    ca:=PosCa
+    RecibirMensaje(id,RI)
+    repetir 5
+      Random (tam,1,5)
+      cuadrado(tam,f)
+      ok:=V
+      si id =1
+        EnviarMensaje(ok,R2)
+        EnviarMensaje(ok,R3)
+      sino 
+        si id=2
+          EnviarMensaje(ok,R1)
+          EnviarMensaje(ok,R3)
+        sino
+          si id=3
+            EnviarMensaje(ok,R2)
+            EnviarMensaje(ok,R1)
+      si id=1
+        RecibirMensaje(ok,R2)
+        RecibirMensaje(ok,R3)
+      sino
+        si id=2
+          RecibirMensaje(ok,R1)
+          RecibirMensaje(ok,R3)
+        sino 
+          si id=3
+            RecibirMensaje(ok,R2)
+            RecibirMensaje(ok,R1)
+      ca:=ca+tam+1
+      Pos(av,ca)
+    depositar(f,av,ca)
+  fin
+  robot robot2
+  comenzar
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+  fin
+variables
+  R1: robot1
+  R2: robot1
+  R3: robot1
+  RI:robot2  
+comenzar
+  AsignarArea(R1, ar1)
+  AsignarArea(R2, ar2)
+  AsignarArea(R3, ar3)
+  AsignarArea(R1, depo)
+  AsignarArea(R2, depo)
+  AsignarArea(R3, depo)
+  AsignarArea(RI, ai)
+  Iniciar(R1, 1,1)
+  Iniciar(R2, 8,1)
+  Iniciar(R3, 15,1)
+  Iniciar(RI, 51,1)
+fin

@@ -1,0 +1,111 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un cÃ³digo de ejemplo que implementa un
+proceso que recibe un nÃºmero de avenida como parÃ¡metro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemploTE
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso cuadrado(E tamanio: numero; ES f:numero;ES esquinasR:numero)
+  comenzar
+    f:=0
+    repetir 4
+      repetir tamanio
+        juntarF(f)
+        esquinasR:=esquinasR+1
+        mover
+      derecha
+  fin
+  proceso depositar(ES f:numero;E av:numero;E ca:numero)
+  comenzar
+    repetir f
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      si HayFlorEnLaBolsa
+        depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(50,50)
+  fin
+areas
+ 
+  aj: AreaP(51,51,51,51)
+  ad: AreaPC(50,50,50,50)
+  a1:AreaP(1,1,5,15)
+  a2:AreaP(7,1,11,15)
+  a3:AreaP(14,1,18,15)
+robots
+  robot robot1
+  variables
+    id,tamanio,f,esquinasR,av,ca,check:numero
+  comenzar
+    RecibirMensaje(id,RJ)
+    check:=1
+    av:=PosAv
+    ca:=PosCa
+    esquinasR:=0
+    repetir 2
+      Random(tamanio,1,4)
+      cuadrado(tamanio,f,esquinasR)
+      depositar(f,av,ca)
+      ca:=ca+tamanio+1
+      Pos(av,ca)
+    Random(tamanio,1,4)
+    cuadrado(tamanio,f,esquinasR)
+    depositar(f,av,ca)
+        
+    EnviarMensaje(id,RJ)
+    EnviarMensaje(esquinasR,RJ)    
+  fin
+  robot robot2
+  variables
+    id,max,ganador,esqr:numero
+  comenzar
+    max:=-10
+    ganador:=0
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+    
+    repetir 3
+      RecibirMensaje(id,*)
+      si id=1
+        RecibirMensaje(esqr,R1)
+        si esqr>max
+          max:= esqr
+          ganador:=id
+      sino
+        si id=2
+          RecibirMensaje(esqr,R2)
+          si esqr>max
+            max:= esqr
+            ganador:=id
+        sino
+          RecibirMensaje(esqr,R3)
+          si esqr>max
+            max:= esqr
+            ganador:=id
+    Informar('winner ', ganador)        
+  fin
+variables
+  R1: robot1
+  R2: robot1
+  R3: robot1
+  RJ: robot2
+comenzar
+  AsignarArea(R1, a1)
+  AsignarArea(R2, a2)
+  AsignarArea(R3, a3)
+  AsignarArea(R1, ad)
+  AsignarArea(R2, ad)
+  AsignarArea(R3, ad)
+  AsignarArea(RJ, aj)
+  Iniciar(R1, 1,1)
+  Iniciar(R2, 7,1)
+  Iniciar(R3, 14,1)
+  Iniciar(RJ, 51,51)
+fin

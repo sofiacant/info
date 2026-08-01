@@ -1,0 +1,78 @@
+programa ejemplo
+procesos
+  proceso recolectarFlores
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  proceso recolectarPapeles
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  
+  proceso recorrerImpares
+  variables
+    av:numero
+  comenzar
+    av:=PosAv
+    repetir 24
+      repetir 99
+        recolectarFlores
+        mover
+      recolectarFlores
+      av:=av+1
+      Pos(av,1)
+    repetir 99
+      recolectarFlores
+      mover
+    recolectarFlores   
+  fin
+  proceso recorrerPares
+  variables
+    av:numero
+  comenzar
+    av:= PosAv
+    repetir 24
+      repetir 99
+        recolectarPapeles
+        mover
+      recolectarPapeles
+      av:=av+1
+      Pos(av,1)
+    repetir 99
+      recolectarPapeles
+      mover
+    recolectarPapeles  
+  fin
+areas
+  ciudad1: AreaP(1,1,25,100)
+  ciudad2: AreaP(26,1,50,100)
+  ciudad3: AreaP(51,1,75,100)
+  ciudad4: AreaP(76,1,100,100)
+robots
+  robot robot1
+  comenzar 
+    recorrerImpares
+    Pos(51, 1)
+    recorrerImpares  
+  fin
+  robot robot2
+  variables
+    papeles:numero
+  comenzar
+    recorrerPares
+    Pos(76,1)
+    recorrerPares
+  fin
+variables
+  r1: robot1
+  r2: robot2
+comenzar
+  AsignarArea(r1, ciudad1)
+  AsignarArea(r2, ciudad2)
+  AsignarArea(r1, ciudad3)
+  AsignarArea(r2, ciudad4)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 26,1)  
+fin

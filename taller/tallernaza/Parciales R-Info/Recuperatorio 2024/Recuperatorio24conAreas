@@ -1,0 +1,144 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un cÃ³digo de ejemplo que implementa un
+proceso que recibe un nÃºmero de avenida como parÃ¡metro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso juntarP(ES objeto: numero)
+  comenzar
+    si HayPapelEnLaEsquina
+      tomarPapel
+      objeto:=objeto+1
+  fin
+  proceso juntarF(ES objeto: numero)
+  comenzar
+    si HayFlorEnLaEsquina
+      tomarFlor
+      objeto:=objeto+1
+  fin
+areas
+  area1: AreaPC(34,1,66,9)
+  area2:AreaPC(34,20,66,29)
+  depoP:AreaPC(50,50,50,50)
+  depoF:AreaPC(49,49,49,49)
+  afis:AreaP(1,1,1,1)
+robots
+  robot robot1
+  variables
+    id,equipo,pasos,p,av,ca:numero
+  comenzar
+    p:=0
+    RecibirMensaje(id,RFS)
+    RecibirMensaje(equipo,RFS)
+    Random(pasos,4,8)
+    repetir pasos
+      juntarP(p)
+      mover
+    derecha
+    pasos:=pasos*2
+    repetir pasos
+      juntarP(p)
+      mover
+    juntarP(p)
+    av:=PosAv
+    ca:=PosCa
+    repetir p
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      depositarPapel
+      Pos(av,ca)
+      LiberarEsquina(50,50)
+    EnviarMensaje(equipo,RFS)
+    EnviarMensaje(p,RFS)  
+    
+    
+  fin
+  robot robot2
+  variables
+    id,equipo,pasos,f,av,ca:numero
+  comenzar
+    f:=0
+    RecibirMensaje(id,RFS)
+    RecibirMensaje(equipo,RFS)
+    Random(pasos,3,7)
+    repetir pasos
+      juntarF(f)
+      mover
+    derecha
+    derecha
+    derecha
+    pasos:=pasos*2
+    repetir pasos
+      juntarF(f)
+      mover
+    juntarF(f)
+    av:=PosAv
+    ca:=PosCa
+    repetir f
+      BloquearEsquina(49,49)
+      Pos(49,49)
+      depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(49,49)
+    EnviarMensaje(equipo,RFS)
+    EnviarMensaje(f,RFS)
+  fin
+  robot robot3
+  variables
+    equipo,p,f,av,ca,ft,pt:numero
+  comenzar
+    EnviarMensaje(1,RP1)
+    EnviarMensaje(2,RP2)
+    EnviarMensaje(3,RF1)
+    EnviarMensaje(4,RF2)
+    EnviarMensaje(1,RP1)
+    EnviarMensaje(1,RP2)
+    EnviarMensaje(2,RF1)
+    EnviarMensaje(2,RF2)
+    pt:=0
+    ft:=0
+    repetir 4
+      RecibirMensaje(equipo,*)
+      si equipo=1
+        RecibirMensaje(p,*)
+        pt:=pt+p
+      sino
+        RecibirMensaje(f,*)
+        ft:=ft+f
+    av:=PosAv
+    ca:=PosCa
+    Pos(50,50)
+    repetir pt
+      tomarPapel
+    Pos(49,49)
+    repetir ft
+      tomarFlor
+    Pos(av,ca)
+    Informar('total de objetos ' , ft+pt)
+      
+  fin 
+variables 
+  RP1: robot1
+  RP2: robot1
+  RF1: robot2
+  RF2: robot2
+  RFS: robot3
+comenzar 
+  AsignarArea(RP1, area1)
+  AsignarArea(RP2, area2)
+  AsignarArea(RF1, area1)
+  AsignarArea(RF2, area2)
+  AsignarArea(RFS, afis)
+  AsignarArea(RP1, depoP)
+  AsignarArea(RP2, depoP)
+  AsignarArea(RF1, depoF)
+  AsignarArea(RF2, depoF)
+  AsignarArea(RFS, depoP)
+  AsignarArea(RFS, depoF)
+  Iniciar(RP1, 50,1)
+  Iniciar(RP2,50,20)
+  Iniciar(RF1, 49,1)
+  Iniciar(RF2,49,20)
+  Iniciar(RFS,1,1)
+fin

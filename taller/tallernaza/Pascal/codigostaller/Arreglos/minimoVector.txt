@@ -1,0 +1,11 @@
+procedure minimoVector (v: vector; var min: {*****}; var pos: integer); {Devuelve el maximo y su posicion en el arreglo} {Enviar "min" en un numero muy grande}
+var
+  i: integer;
+
+Begin
+  for i := 1 to dimL do begin
+    if (v[i] < min) then begin
+       min := v[i];
+       pos := i;
+   end;
+end;

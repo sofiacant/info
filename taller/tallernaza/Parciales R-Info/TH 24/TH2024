@@ -1,0 +1,144 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso asignarCuadrado
+  variables
+    cuadrado:numero   
+  comenzar
+    Random(cuadrado,1,6)
+    EnviarMensaje(cuadrado,R1)  
+    Random(cuadrado,1,6)
+    EnviarMensaje(cuadrado,R2)
+    Random(cuadrado,1,6)
+    EnviarMensaje(cuadrado,R3)  
+  fin
+  proceso limpiarEsquina50( E avAct:numero;E caAct:numero)
+  comenzar
+    BloquearEsquina(50,50)
+    Pos(50,50)
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+    Pos(avAct,caAct)
+    LiberarEsquina(50,50)  
+  fin
+  proceso juntarF(ES f: numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+
+  proceso cuadrado(ES f: numero; E cua:numero)
+  comenzar
+    f:=0
+    repetir 4
+      repetir cua
+        juntarF(f)
+        mover
+      derecha
+  fin
+areas
+  a1:AreaP(1,1,7,19)
+  a2:AreaP(10,1,17,19)
+  a3:AreaP(20,1,27,19)
+  aF:AreaP(100,100,100,100)
+  ac:AreaPC(50,50,50,50)
+robots
+  robot robot1
+  variables
+    id,cua,f,fact,avAct,caAct,con:numero
+  comenzar
+    con:=1
+    f:=0
+    fact:=0
+    RecibirMensaje(id,RF)
+    RecibirMensaje(cua,RF)
+    repetir 3
+      cuadrado(fact,cua)
+      f:=f+fact
+      avAct:=PosAv
+      caAct:=PosCa
+      repetir fact
+        BloquearEsquina(50,50)
+        Pos(50,50)
+        si HayFlorEnLaBolsa
+          depositarFlor
+        Pos(avAct,caAct)
+        LiberarEsquina(50,50)
+      EnviarMensaje(id,RF) 
+      EnviarMensaje(fact,RF)
+      fact:=0
+      caAct:=caAct+cua+1
+      si(con<3)
+        con:=con+1
+        Pos(avAct,caAct)
+  fin
+  
+  robot robot2
+  variables
+    id,floB,f1,f2,f3,ganador,avIni,caIni,max:numero
+  comenzar
+    f1:=0
+    f2:=0
+    f3:=0
+    max:=0
+    avIni:=PosAv
+    caIni:=PosCa
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+    asignarCuadrado
+    repetir 9
+      RecibirMensaje(id,*)
+      si (id=1)
+        RecibirMensaje(floB,R1)
+        limpiarEsquina50(avIni,caIni)
+        f1:=f1+floB
+      sino
+        si(id=2)    
+          RecibirMensaje(floB,R2)
+          limpiarEsquina50(avIni,caIni)
+          f2:=f2+floB
+        sino
+          RecibirMensaje(floB,R3)
+          limpiarEsquina50(avIni,caIni)
+          f3:=f3+floB
+    max:=-10
+    si f1>max
+      max:=f1
+      ganador:=1
+    sino
+      si f2>max
+        max:=f2
+        ganador:=2
+      sino 
+        si f3>max
+          max:=f3
+          ganador:=3
+    Informar('El ganador es  ', ganador)
+    Informar(max)
+              
+  fin 
+variables
+  R1: robot1
+  R2: robot1
+  R3: robot1
+  RF: robot2
+comenzar
+  AsignarArea(R1, a1)
+  AsignarArea(R2, a2)
+  AsignarArea(R3, a3)
+  AsignarArea(RF,aF)
+  AsignarArea(R1, ac)
+  AsignarArea(R2, ac)
+  AsignarArea(R3, ac)
+  AsignarArea(RF,ac)
+  Iniciar(R1, 1,1)
+  Iniciar(R2,10,1)
+  Iniciar(R3,20,1)
+  Iniciar(RF,100,100)
+fin

@@ -1,0 +1,18 @@
+procedure borrarElemento (var l:lista; dato: {*****});
+var
+  act, ant: lista;
+begin
+  act := l; 
+  while (act <> nil) and (act^.elem <> dato) do begin
+    ant := act;
+    act := act^.sig;
+  end;
+
+  if (act <> nil) then begin
+    if (act = l) then 
+        l := l^.sig;
+       else 
+          ant^.sig:= act^.sig;
+  dispose (act);
+  end;
+end;

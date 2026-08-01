@@ -1,0 +1,41 @@
+en el caso de búsqueda (entre rangos) tenemos 3 casos:
+que este en el medio:debo recorrer con los dos hijos
+
+2) que sea mayor que el techo, debo seguir recorriendo con el hijo izquierdo
+
+3)si es menor al rango inferior recorro con el hijo derecho
+
+
+recorrido acotado: comparo mi raíz con el rango , sigo buscando con hd y hi,
+
+
+si me paso porque es mayor, llamo con mi HIJO IZQUEIRDO, 
+
+30 y 80(cota superior)
+
+
+if(a^.dato >= cotaInferiror)
+i	if (a^.dato <= cotaInferiror)
+			entonces cumple e imprime//accion
+			recursivo con HIJO IZQUIERDO
+			RECURSIVO CON HD
+	ELSE
+		RECURSIVO CON HIJO IZQUIERDO
+//
+ELSE 
+	RECURSIVO CON HD
+
+EJ:si es mayor a 30
+	si es mayor que la sup
+			accion
+	else
+		llamamos con hijo derecho
+
+
+ej menores que 80
+	if condición
+		accion
+		llamamos con los dos hijos
+	else
+		llamamos con hijo izquierdo
+

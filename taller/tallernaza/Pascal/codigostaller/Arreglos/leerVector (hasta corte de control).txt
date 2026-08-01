@@ -1,0 +1,20 @@
+procedure leerVector (var v: vector; var dimL: integer);
+var
+  dato: {*****};
+
+begin
+  dimL := 0;
+  write('Ingrese el valor: '); {valor, numero, peso, nombre, etc}
+  readln(dato);
+
+  while ((dimL < dimF) and (dato <> {*****})) do begin
+    writeln('_________________________________________________________');
+    dimL := dimL + 1;
+    v[dimL] := dato;
+    write('Ingrese el valor: '); {valor, numero, peso, nombre, etc}
+    readln(dato);
+
+  end;
+
+  writeln('_________________________________________________________');
+end;

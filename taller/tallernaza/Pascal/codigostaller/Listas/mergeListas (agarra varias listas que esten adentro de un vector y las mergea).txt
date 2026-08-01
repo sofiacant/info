@@ -1,0 +1,96 @@
+program mergeList;         {Agarra un vector de 4 listas de numeros enteros, las mergea y las pone en una quinta lista}
+
+{CONSTANTES NECESARIAS}
+
+const
+  vdlTam = 4;              {vdl = vector de listas (aca se guardan las listas sin mergear)}
+  maxUnmerged = 10;        {Maxima cantidad de numeros que tendran las listas sin mergear}
+  datoMax = 10;            {Numero maximo al que llegaran los elementos de las listas sin mergear (y por ende de la mergeada)}
+
+
+{ESTRUCTURAS A DECLARAR}
+
+type
+  lista = ^nodoL;
+  nodoL = record
+    dato: integer;
+    sig: lista;
+  end;
+
+  vdl = array [1..vdlTam] of lista;
+
+function minimum (v: vdl): integer;
+var
+  i, min, minIndex: integer;
+
+begin
+  min := maxint;
+  minIndex := vdlTam + 1;
+
+  for i := 1 to vdlTam do begin
+    if ((v[i] <> nil) and (v[i]^.dato < min)) then begin
+      minIndex := i;
+      min := v[i]^.dato;
+    end;
+  end;
+
+  minimum := minIndex;
+end;
+
+procedure append (var l, tail: ptrNodo; n: integer);
+var
+  aux: ptrNodo;
+
+begin
+  new(aux);
+  aux^.dato := n;
+  aux^.sig := nil;
+
+  if (l <> nil) then
+     tail^.sig := aux
+  else
+      l := aux;
+
+  tail := aux;
+end;
+
+procedure borrarElemento (var l:lista);
+var
+  act: lista;
+begin
+  act := l; 
+  l := l^.sig;
+  dispose (act);
+  end;
+end;
+
+procedure mergeLista (unmerged: vdl; var mergeHead: ptrNodo; var mergeTail: ptrNodo);
+var
+  min: integer;
+
+begin
+   min := minimum(unmerged);
+
+  while (min <> vdlTam + 1) do begin
+    append(mergeHead, mergeTail, unmerged[min]^.dato); 			 {agregar al final de la nueva lista}
+
+    borrarPrimerElemento(unmerged[min]);     				 {saca el dato de unmerged}
+
+    min := minimum(unmerged);          					 {FUNCION: calcula el minimo entre los datos de los primeros punteros de todas las listas}
+  end;
+end;
+
+
+{PROGRAMA PRINCIPAL}
+
+var
+  unmerged: vdl;
+  mergeHead, mergeTail: ptrNodo;
+
+begin
+  mergeHead := nil;
+  mergeTail := nil;
+
+  mergeLista(unmerged, mergeHead, mergeTail);
+
+end.

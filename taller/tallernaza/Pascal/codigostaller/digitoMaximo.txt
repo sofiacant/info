@@ -1,0 +1,12 @@
+procedure digitoMaximo (n: integer; var max: integer);  {Enviar el max en -1}
+var
+ dig: integer;
+begin
+ if(n <> 0) then begin
+     dig := n mod 10;
+     if(dig > max) then
+          max := dig;
+     n := n div 10;
+     digitoMaximo(n, max);
+    end;
+end;

@@ -1,0 +1,15 @@
+procedure busquedaDicotomica(v: arreglo; ini, fin: integer; dato: {*****}; var pos: integer);
+begin
+  if (ini > fin) then writeln('El numero ingresado no se encuentra en el vector')
+  else begin
+    pos := (ini + fin) div 2;
+    if (v[pos] = dato) then writeln('El numero ingresado se encuentra en la posicion ', pos, ' del vector.')
+    else begin
+      if (dato < v[pos]) then begin
+        fin := pos - 1;
+      end
+      else ini := pos + 1;
+      busquedaDicotomica(v, ini, fin, dato, pos);
+    end;
+  end;
+end;

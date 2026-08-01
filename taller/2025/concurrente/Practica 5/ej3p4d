@@ -1,0 +1,91 @@
+programa ej3p5
+procesos
+  proceso recolectarDeposito(ES flores:numero)
+  comenzar
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+    Pos(1,5)
+    LiberarEsquina(10,10)
+  fin
+  proceso vaciarBolsa(ES flores:numero; E avActual:numero; E ca:numero)
+  comenzar
+    BloquearEsquina(10,10)
+    Pos(10,10)
+    repetir flores
+      depositarFlor
+    Pos(avActual,ca)
+    LiberarEsquina(10,10)
+    EnviarMensaje(V,c1)
+  fin
+  proceso juntarFlores(ES flores: numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)&(flores<10)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso recorrerCalle(ES ca:numero; ES flores:numero)
+  variables
+    esq:numero
+    avActual:numero
+  comenzar
+    esq:=1
+    mientras(PosAv< 100)
+      mientras(esq<15)&(flores<10)&(PosAv < 100)
+        juntarFlores(flores)
+        mover
+        esq:=esq+1
+      avActual:=PosAv
+      vaciarBolsa(flores,avActual,ca)  
+      si(esq=15)
+        esq:=0
+      flores:=0
+  fin
+areas
+  areaCosecha: AreaP (1,5,1,5)
+  calle4: AreaP(1,4,100,4)
+  calle3: AreaP(1,3,100,3)
+  esquina: AreaC(10,10,10,10)
+robots
+  robot recolector
+  variables
+    ca:numero
+    flores:numero
+  comenzar
+    ca:= PosCa
+    flores:=0
+    derecha
+    recorrerCalle(ca,flores) 
+    si(PosAv=100)
+      EnviarMensaje(F,c1)
+  fin
+  robot cosechador
+  variables
+    flores,cont:numero
+    ok1,ok2,cosecho:boolean
+  comenzar 
+    cont:=0
+    mientras(cont<>2)
+      RecibirMensaje(cosecho,*)
+      si(cosecho)
+        recolectarDeposito(flores)
+      sino
+        cont:=cont+1
+    Informar('Flores',flores)
+  fin
+variables
+  r1,r2: recolector
+  c1:cosechador
+comenzar
+  AsignarArea(r1, calle3)
+  AsignarArea(r2, calle4)
+  AsignarArea(c1, areaCosecha)
+  AsignarArea(c1,esquina)
+  AsignarArea(r1,esquina)
+  AsignarArea(r2,esquina)
+  Iniciar(r1,1,3)
+  Iniciar(r2,1,4)
+  Iniciar(c1,1,5)
+fin

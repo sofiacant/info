@@ -1,0 +1,158 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso juntarF(ES f: numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:= f+1
+  fin
+  proceso juntarP(ES p: numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:= p+1
+  fin
+areas
+  areaF: AreaPC (10,6,19,12)
+  areaDescanso:AreaPC(20,6,25,12)
+  areaP:AreaPC(26,6,40,12)
+  areaFis: AreaP(20,15,20,15)
+robots
+  robot robot1
+  variables
+    id,f,p,pasos,av,caIni:numero
+    termine:boolean
+  comenzar
+    RecibirMensaje(id,RF)
+    termine:=F
+    av:=10
+    caIni:=PosCa
+    derecha
+    mientras termine =F
+      EnviarMensaje(id,RF)
+      EnviarMensaje(termine,RF)
+      RecibirMensaje(pasos,RF)
+      repetir pasos
+        mover
+      juntarF(f)
+      ca:=ca+pasos
+      si av>=20
+        termine :=V
+      EnviarMensaje(termine,RF)
+      si termine=V
+        EnviarMensaje(id,RF)
+    Pos(25,caIni) 
+    termine:=F
+    av:=25
+    mientras termine =F
+      EnviarMensaje(id,RF)
+      EnviarMensaje(termine,RF)
+      RecibirMensaje(pasos,RF)
+      repetir pasos
+        mover
+      juntarF(f)
+      ca:=ca+pasos
+      si av>=40
+        termine :=V
+      EnviarMensaje(termine,RF)
+      si termine=V
+        EnviarMensaje(id,RF) 
+  fin
+  robot robot2
+  variables
+    id,primero1,primero2,cant,pasos:numero
+    termino:boolean 
+  comenzar
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+    EnviarMensaje(4,R4)
+    cant:=0
+    mientras cant<4 
+      RecibirMensaje(id,*)
+      si id =1
+        RecibirMensaje(termino,R1)
+        si termino =F
+          Random(pasos,1,3)
+          EnviarMensaje(pasos,R1)
+        sino
+          cant:=cant+1
+      sino
+        si id =2
+          RecibirMensaje(termino,R2)
+          si termino=F
+            Random(pasos,1,3)
+            EnviarMensaje(pasos,R2)
+          sino
+            cant:=cant+1
+        sino
+          si id =3
+            RecibirMensaje(termino,R3)
+            si termino=F
+              Random(pasos,1,3)
+              EnviarMensaje(pasos,R3) 
+            sino
+              cant:=cant+1
+          sino
+            si id = 4
+              RecibirMensaje(termino,R4)
+              si termino=F
+                Random(pasos,1,3)
+                EnviarMensaje(pasos,R4)
+              sino
+                cant:=cant+1
+    RecibirMensaje(id,*)
+    ganador1:=id
+    si ganador=1
+      RecibirMensaje(id,R2)
+      RecibirMensaje(id,R3)
+      RecibirMensaje(id,R4)  
+    sino 
+      si ganador=2
+        RecibirMensaje(id,R1)
+        RecibirMensaje(id,R3)
+        RecibirMensaje(id,R4)  
+      sino
+        si ganador=3
+          RecibirMensaje(id,R1)
+          RecibirMensaje(id,R2)
+          RecibirMensaje(id,R4)  
+        sino
+          si ganador=4
+            RecibirMensaje(id,R1)
+            RecibirMensaje(id,R2)
+            RecibirMensaje(id,R3)  
+
+
+  fin
+variables
+  R1: robot1
+  R2: robot1
+  R3: robot1
+  R4: robot1
+  RF: robot2
+comenzar
+  AsignarArea(R1, areaF)
+  AsignarArea(R2, areaF)
+  AsignarArea(R3, areaF)
+  AsignarArea(R4, areaF)
+  AsignarArea(R1, areaDescanso)
+  AsignarArea(R2, areaDescanso)
+  AsignarArea(R3, areaDescanso)
+  AsignarArea(R4, areaDescanso)
+  AsignarArea(R1, areaP)
+  AsignarArea(R2, areaP)
+  AsignarArea(R3, areaP)
+  AsignarArea(R4, areaP)
+  AsignarArea(RF, areaFis)
+  Iniciar(R1, 10,6)
+  Iniciar(R2, 10,8)
+  Iniciar(R3, 10,10)
+  Iniciar(R4, 10,12)
+  Iniciar(RF, 20,15)
+fin

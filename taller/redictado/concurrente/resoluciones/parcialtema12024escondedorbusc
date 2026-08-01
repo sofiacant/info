@@ -1,0 +1,58 @@
+programa ejemplo
+procesos
+  proceso buscarFlor(ES ok:boolean)
+  variables
+    avIni,caIni,ca,av:numero
+  comenzar
+    avIni:=PosAv
+    caIni:=PosCa
+    Random(av,10,13)
+    Random(ca,10,13)
+    BloquearEsquina(av,ca)
+    Pos(av,ca)
+    si(HayFlorEnLaEsquina)
+      tomarFlor
+      ok:=V
+    EnviarMensaje(ok,rc)
+    Pos(avIni,caIni)
+    LiberarEsquina(av,ca)
+  fin
+areas
+  areaFlor: AreaC (10,10,13,13)
+robots
+  robot escondedor
+  variables
+    av,ca:numero
+  comenzar
+    Random(av,10,13)
+    Random(ca,10,13)
+    Pos(av,ca)
+    depositarFlor
+    EnviarMensaje(V,r2)
+    EnviarMensaje(V,r3)
+    EnviarMensaje(V,r4)
+    
+  fin
+  robot buscador
+  variables
+    ok:boolean
+    cant:numero
+  comenzar
+    cant:=0
+    RecibirMensaje(ok,r1)
+    mientras(cant<3)
+      buscarFlor(cant)
+  fin
+variables
+  r1: escondedor
+  r2,r2,r4:buscador
+comenzar
+  AsignarArea(r1, areaFlor)
+  AsignarArea(r2, areaFlor)
+  AsignarArea(r3, areaFlor)  
+  AsignarArea(r4, areaFlor)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 2,2)
+  Iniciar(r3,3,3)
+  Iniciar(r4,4,4)
+fin

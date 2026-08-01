@@ -1,0 +1,7 @@
+procedure agregarVector (var v: vector; var dimL: integer; dato: {*****});
+begin
+  if (dimL < dimF) then begin   {Esto podria preguntarse en el programa principal, antes de llamar al modulo. De hacerse asi, sacar el begin y el end}
+    dimL + 1;
+    v[dimL] := dato;
+  end;
+end;

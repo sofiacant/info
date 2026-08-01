@@ -1,0 +1,163 @@
+programa valen
+procesos
+  proceso enviarId
+  comenzar
+    EnviarMensaje(1,rA)
+    EnviarMensaje(2,rB)
+  fin
+  proceso actMax(E flores:numero; ES floresMax:numero; ES idMax:numero; E id:numero)
+  comenzar
+    si(flores>floresMax)
+      floresMax:=flores
+      idMax:=id
+  fin
+  proceso recolectarFlores(ES flores:numero)
+  comenzar
+    flores:=0
+    BloquearEsquina(1,5)
+    Pos(1,5)
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+    Pos(4,1)
+    LiberarEsquina(1,5)
+  fin
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso depositarFlores(ES flores:numero)
+  variables
+    av,ca:numero
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    BloquearEsquina(1,5)
+    Pos(1,5)
+    depositarFlor
+    flores:=flores-1
+    Pos(av,ca)
+    LiberarEsquina(1,5)
+  fin
+  proceso escalon (ES flores:numero ; E alto:numero; E ancho:numero; ES av:numero; ES ca:numero; E miId:numero)
+  comenzar
+    repetir alto
+      juntarFlores(flores)
+      mover
+    derecha
+    repetir ancho
+      juntarFlores(flores)
+      mover
+    mientras(flores>0)
+      depositarFlores(flores)
+    av:=PosAv
+    ca:=PosCa+1
+    repetir 3
+      derecha  
+    EnviarMensaje(miId,rjefe)
+    EnviarMensaje(V,rjefe)  
+  fin
+areas
+  areajefe:AreaP(4,1,4,1)
+  areaEscalera:AreaPC(2,1,27,27)
+  esq:AreaC(1,5,1,5)
+robots
+  robot robotA
+  variables
+    flores:numero
+    alto,ancho:numero
+    av,ca:numero
+    ok:boolean
+    miId:numero
+  comenzar
+    flores:=0
+    RecibirMensaje(miId,rjefe)
+    Random(alto,2,5)
+    Random(ancho,2,5)
+    escalon(flores,alto,ancho,av,ca,miId)
+    EnviarMensaje(V,rB)
+    EnviarMensaje(av,rB)
+    EnviarMensaje(ca,rB)
+    RecibirMensaje(ok,rB)
+    si(ok)
+      RecibirMensaje(av,rB)
+      RecibirMensaje(ca,rB)
+      Random(alto,2,5)
+      Random(ancho,2,5)
+      Pos(av,ca)
+      escalon(flores,alto,ancho,av,ca,miId)
+      EnviarMensaje(V,rB)
+      EnviarMensaje(av,rB)
+      EnviarMensaje(ca,rB) 
+  fin
+  robot robotB
+  variables
+    ok:boolean
+    alto,ancho:numero
+    flores:numero
+    ok2:boolean
+    miId:numero
+    av,ca:numero
+  comenzar
+    flores:=0
+    RecibirMensaje(miId,rjefe)
+    RecibirMensaje(ok,rA)
+    si(ok)
+      Random(alto,3,6)
+      Random(ancho,3,6)
+      RecibirMensaje(av,rA)
+      RecibirMensaje(ca,rA)
+      Pos(av,ca)
+      escalon(flores,alto,ancho,av,ca,miId)
+      EnviarMensaje(V,rA)
+      EnviarMensaje(av,rA)
+      EnviarMensaje(ca,rA)
+      RecibirMensaje(ok2,rA)
+      si(ok2)
+        RecibirMensaje(av,rA)
+        RecibirMensaje(ca,rA)
+        Random(alto,3,6)
+        Random(ancho,3,6)
+        Pos(av,ca)
+        escalon(flores,alto,ancho,av,ca,miId) 
+  fin
+  robot jefe
+  variables
+    flores,floresMax:numero
+    idMax,id:numero
+    ok,termino:boolean
+  comenzar
+    floresMax:=0
+    idMax:=0
+    enviarId
+    repetir 4
+      RecibirMensaje(id,*)
+      si(id=1)
+        RecibirMensaje(ok,rA)
+        si(ok)
+          recolectarFlores(flores)
+      sino
+        si(id=2)
+          RecibirMensaje(ok,rB)
+          si(ok)
+            recolectarFlores(flores)
+      actMax(flores,floresMax,idMax,id)
+    Informar(idMax)
+  fin
+variables
+  rA:robotA
+  rB:robotB
+  rjefe:jefe
+comenzar
+  AsignarArea(rA,areaEscalera)
+  AsignarArea(rA,esq)
+  AsignarArea(rB,areaEscalera)
+  AsignarArea(rB,esq)
+  AsignarArea(rjefe,areajefe)
+  AsignarArea(rjefe,esq)
+  Iniciar(rA,2,1)
+  Iniciar(rB,3,1)
+  Iniciar(rjefe,4,1)
+fin

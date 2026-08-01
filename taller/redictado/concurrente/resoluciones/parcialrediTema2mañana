@@ -1,0 +1,142 @@
+programa ejparcial
+procesos
+  proceso enviarIDS
+  comenzar
+    EnviarMensaje(1,r1)
+    EnviarMensaje(2,r2)
+    EnviarMensaje(3,r3)    
+  fin
+  proceso enviarTamaños
+  variables
+    lado1,lado2,lado3:numero
+  comenzar
+    Random(lado1,1,9)
+    EnviarMensaje(lado1,r1)
+    Random(lado2,1,9)
+    EnviarMensaje(lado2,r2)
+    Random(lado3,1,9)
+    EnviarMensaje(lado3,r3) 
+  fin
+  proceso calcularMax(E id:numero;E flores:numero; ES idMax:numero; ES fMax:numero)
+  comenzar
+    si(flores> fMax)
+      fMax:=flores
+      idMax:=id
+  fin
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso hacerLado(E lado:numero; E id:numero; ES flores:numero)
+  comenzar
+    repetir lado
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+    derecha
+    EnviarMensaje(id,jefe)
+    EnviarMensaje(flores,jefe)
+  fin
+  proceso depositarEsquina(E av:numero; E ca:numero)
+  comenzar
+    BloquearEsquina(31,2)
+    Pos(31,2)
+    depositarFlor
+    Pos(av,ca)
+    LiberarEsquina(31,2)
+  fin
+areas
+  area1: AreaP (1,1,10,10)
+  area2: AreaP (11,1,20,10)
+  area3: AreaP (21,1,30,10)
+  esquina: AreaPC (31,2,31,2)
+  areaJefe: AreaP (31,1,31,1)
+robots
+  robot perimetrales
+  variables
+    id,lado,flores:numero
+    ok:boolean
+    av,ca:numero
+  comenzar
+    flores:=0
+    RecibirMensaje(id,jefe)
+    RecibirMensaje(lado,jefe)
+    repetir 4
+      hacerLado(lado,id,flores)
+      RecibirMensaje(ok,jefe)
+      si(ok)
+        av:=PosAv
+        ca:=PosCa
+        repetir flores
+          depositarEsquina(av,ca)
+      si(id=1)
+        EnviarMensaje(V,r2)
+        EnviarMensaje(V,r3)
+        RecibirMensaje(ok,*)
+        RecibirMensaje(ok,*)
+      sino
+        si(id=2)
+          EnviarMensaje(V,r1)
+          EnviarMensaje(V,r3)
+          RecibirMensaje(ok,*)
+          RecibirMensaje(ok,*)
+        sino
+          EnviarMensaje(V,r1)
+          EnviarMensaje(V,r2)
+          RecibirMensaje(ok,*)
+          RecibirMensaje(ok,*)
+      flores:=0
+  fin
+  robot robotjefe
+  variables
+    id,flores:numero
+    idMax,fMax:numero
+  comenzar 
+    enviarIDS
+    enviarTamaños
+    repetir 4
+      idMax:=-1
+      fMax:=-1
+      repetir 3
+        RecibirMensaje(id,*)
+        si (id=1)
+          RecibirMensaje(flores,r1)
+        sino
+          si(id=2)
+            RecibirMensaje(flores,r2)
+          sino
+            RecibirMensaje(flores,r3)
+      calcularMax(id,flores,idMax,fMax)
+      Informar('El ganador es', idMax)
+      si(idMax= 1)
+        EnviarMensaje(V,r1)
+        EnviarMensaje(F,r2)
+        EnviarMensaje(F,r3)
+      sino
+        si(idMax=2)
+          EnviarMensaje(F,r1)
+          EnviarMensaje(V,r2)
+          EnviarMensaje(F,r3)
+        sino
+          EnviarMensaje(F,r1)
+          EnviarMensaje(F,r2)
+          EnviarMensaje(V,r3)
+  fin
+variables
+  jefe: robotjefe
+  r1,r2,r3: perimetrales
+comenzar
+  AsignarArea(jefe, areaJefe)
+  AsignarArea(r1,esquina)
+  AsignarArea(r2,esquina)
+  AsignarArea(r3,esquina)
+  AsignarArea(r1,area1)
+  AsignarArea(r2,area2)
+  AsignarArea(r3,area3)
+  Iniciar(r1,1,1)
+  Iniciar(r2,11,1)
+  Iniciar(r3,21,1)
+  Iniciar(jefe, 31,1)
+fin

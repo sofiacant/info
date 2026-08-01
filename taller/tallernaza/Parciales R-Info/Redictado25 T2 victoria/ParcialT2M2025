@@ -1,0 +1,145 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso cuadrado(ES f: numero;E perimetro:numero)
+  comenzar
+    repetir perimetro
+      juntarF(f)
+      mover
+    derecha
+  fin
+areas
+  arear1: AreaP (1,1,10,10)
+  arear2:AreaP(11,1,20,10)
+  arear3:AreaP(21,1,30,10)
+  depo:AreaPC(31,2,31,2)
+  arearc:AreaP(31,1,31,1)
+robots
+  robot robot1
+  variables
+    id,perimetro,f,ft,ganador,av,ca:numero
+    ok:boolean
+  comenzar
+    RecibirMensaje(id,RC)
+    RecibirMensaje(perimetro,RC)
+    repetir 4
+      f:=0
+      cuadrado(f,perimetro)
+      ft:=ft+f
+      EnviarMensaje(id,RC)
+      EnviarMensaje(f,RC)
+      RecibirMensaje(ganador,RC)
+      si id=ganador
+        si id=1
+          RecibirMensaje(ok,R2)
+          RecibirMensaje(ok,R3)
+          EnviarMensaje(ok,RC)
+        sino
+          si id=2
+            RecibirMensaje(ok,R1)
+            RecibirMensaje(ok,R3)
+            EnviarMensaje(ok,RC)
+          sino
+            si id=3
+              RecibirMensaje(ok,R2)
+              RecibirMensaje(ok,R1)
+              EnviarMensaje(ok,RC)
+      sino
+        av:=PosAv
+        ca:=PosCa
+        repetir f
+          BloquearEsquina(31,2)
+          Pos(31,2)
+          depositarFlor
+          Pos(av,ca)
+          LiberarEsquina(31,2)
+        si id=1
+          EnviarMensaje(ok,R2)
+          EnviarMensaje(ok,R3)
+          EnviarMensaje(ok,RC)
+        sino
+          si id=2
+            EnviarMensaje(ok,R1)
+            EnviarMensaje(ok,R3)
+            EnviarMensaje(ok,RC)
+          sino 
+            si id=3
+              EnviarMensaje(ok,R2)
+              EnviarMensaje(ok,R1)
+              EnviarMensaje(ok,RC)
+      RecibirMensaje(ok,RC)  
+  fin
+  robot robot2
+  variables
+    id,perimetro,f,fmax,ganador:numero
+    ok:boolean 
+  comenzar
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+    Random(perimetro,1,9)
+    EnviarMensaje(perimetro,R1)
+    Random(perimetro,1,9)
+    EnviarMensaje(perimetro,R2)
+    Random(perimetro,1,9)
+    EnviarMensaje(perimetro,R3)
+    repetir 4
+      fmax:=-1
+      ganador:=-1
+      repetir 3
+        RecibirMensaje(id,*)
+        si id=1
+          RecibirMensaje(f,R1)
+          si f> fmax
+            fmax:=f
+            ganador:=id
+        sino
+          si id=2
+            RecibirMensaje(f,R2)
+            si f> fmax
+              fmax:=f
+              ganador:=id
+          sino
+            si id=3
+              RecibirMensaje(f,R3)
+              si f> fmax
+                fmax:=f
+                ganador:=id
+      Informar('winner', ganador)
+      EnviarMensaje(ganador,R1)
+      EnviarMensaje(ganador,R2)
+      EnviarMensaje(ganador,R3) 
+      repetir 3
+        RecibirMensaje(ok,*)
+      EnviarMensaje(ok,R1)
+      EnviarMensaje(ok,R2)
+      EnviarMensaje(ok,R3)
+  fin
+variables
+  R1: robot1
+  R2: robot1
+  R3: robot1
+  RC: robot2
+comenzar
+  AsignarArea(R1, arear1)
+  AsignarArea(R2, arear2)
+  AsignarArea(R3, arear3)
+  AsignarArea(RC, arearc)
+  AsignarArea(R1,depo)
+  AsignarArea(R2, depo)
+  AsignarArea(R3, depo)
+  Iniciar(R1, 1,1)
+  Iniciar(R2, 11,1)
+  Iniciar(R3, 21,1)
+  Iniciar(RC, 31,1)
+fin

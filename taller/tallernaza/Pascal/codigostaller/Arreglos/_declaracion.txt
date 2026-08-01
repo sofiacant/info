@@ -1,0 +1,4 @@
+const
+  dimF = {*****};
+type
+  vector = array [1..dimF] of {*****};

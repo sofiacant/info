@@ -1,0 +1,100 @@
+programa ej5p5
+procesos
+  proceso juntarPapeles(E papeles:numero; E av:numero; E ca:numero)
+  comenzar
+    BloquearEsquina(100,1)
+    Pos(100,1)
+    tomarPapel
+    Pos(av,ca)
+    LiberarEsquina(100,1)
+  fin
+  proceso atenderSolicitudes(E avID:numero; ES int:numero)
+  variables
+    papeles:numero
+    av,ca:numero
+    solicitud:boolean
+  comenzar
+    av:=PosAv
+    ca:=PosCa
+    si(avID=10)
+      RecibirMensaje(solicitud,c1)
+      si(solicitud)
+        Random(papeles,1,5)
+        depositarPapeles(papeles,av,ca)
+        EnviarMensaje(papeles,c1)
+      sino
+        int:=int+1
+    sino
+      si(avID=11)
+        RecibirMensaje(solicitud,c2)
+        si(solicitud)
+          Random(papeles,1,5)
+          depositarPapeles(papeles,av,ca)
+          EnviarMensaje(papeles,c2)
+        sino
+          int:=int+1
+      sino
+        RecibirMensaje(solicitud,c3)
+        si(solicitud)
+          Random(papeles,1,5)
+          depositarPapeles(papeles,av,ca)
+          EnviarMensaje(papeles,c3)
+        sino
+          int:=int+1  
+  fin
+  proceso depositarPapeles(ES papeles: numero; E av:numero; E ca:numero)
+  comenzar
+    BloquearEsquina(100,1)
+    Pos(100,1)
+    repetir papeles
+      depositarPapel
+    Pos(av,ca)
+    LiberarEsquina(100,1)
+  fin
+areas
+  esquina: AreaC (100,1,100,1)
+  areac1: AreaP (10,1,10,1)
+  areac2: AreaP (11,1,11,1)
+  areac3: AreaP (12,1,12,1)
+  areaservidor: AreaP (13,1,13,1)
+robots
+  robot rservidor
+  variables
+    avID:numero
+    int:numero
+  comenzar
+    int:=0
+    mientras(int<>3)
+      RecibirMensaje(avID,*)
+      atenderSolicitudes(avID,int)           
+  fin
+  robot rcliente
+  variables
+    papeles:numero
+    avID,ca:numero
+  comenzar
+    avID:=PosAv
+    ca:=PosCa
+    repetir 4
+      EnviarMensaje(avID,rs)
+      EnviarMensaje(V,rs)
+      RecibirMensaje(papeles,rs)
+      juntarPapeles(papeles,avID,ca)
+  fin
+variables
+  rs: rservidor
+  c1,c2,c3: rcliente 
+comenzar
+  AsignarArea(c1, areac1)
+  AsignarArea(c1,esquina)
+  AsignarArea(c2, areac2)
+  AsignarArea(c2,esquina)
+  AsignarArea(c3, areac3)
+  AsignarArea(c3,esquina)
+  AsignarArea(rs,esquina)
+  AsignarArea(rs,areaservidor)
+  Iniciar(c1, 10,1)
+  Iniciar(c2, 11,1)
+  Iniciar(c3, 12,1)
+  Iniciar(rs,13,1)
+fin

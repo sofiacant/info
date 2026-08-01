@@ -1,0 +1,6 @@
+procedure cargarVector (var v: arreglo; var dimL: integer);
+var
+  i: integer;
+begin
+  for i := 1 to dimF do v[i] := 0;
+end;

@@ -1,0 +1,178 @@
+programa parcialequipos2022
+procesos
+  proceso izquierda
+  comenzar
+    repetir 3
+      derecha
+  fin
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flor:=flor+1
+  fin
+  proceso recorrerAvenidaAzul(E av:numero; E ca:numero; ES flores:numero)
+  comenzar
+    mientras(PosAv<19)
+      mover
+      mientras(flores<>0)
+        juntarFlores(flores)
+        BloquearEsquina(av,20)
+        Pos(av,20)
+        depositarFlor
+        flores:=flores-1
+        Pos(av,ca)
+        LiberarEsquina(av,ca)     
+      EnviarMensaje(V,c1)
+    
+  fin
+  proceso recorrerAvenidaVerde(E av:numero; E ca:numero; ES flores:numero)
+  comenzar
+    mientras(PosAv>21)
+      mover
+      mientras(flores<>0) 
+        juntarFlores(flores)
+        BloquearEsquina(av,20)
+        Pos(av,20)
+        depositarFlor
+        flores:=flores-1
+        Pos(av,ca)
+        LiberarEsquina(av,ca)
+      EnviarMensaje(V,c2)   
+  fin
+  proceso recolectoCentral(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso depositarEn20(ES flores:numero; E av:numero; E ca:numero)
+  comenzar
+    repetir flores  
+      BloquearEsquina(20,20)
+      Pos(20,20)
+      depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(20,20)
+  fin
+areas
+  esquina: AreaPC (20,20,20,20)
+  areaAzul: AreaPC (9,19,19,21)
+  areaVerde: AreaPC (21,19,31,21)
+  areaFiscal: AreaP (20,18,20,18)
+robots
+  robot lateralesA
+  variables
+    av,ca,flores:numero
+  comenzar
+    flores:=0
+    derecha
+    av:=PosAv
+    ca:=PosCa
+    recorrerAvenidaAzul(av,ca,flores)
+  fin
+  robot lateralesV
+  variables
+    av,ca:numero
+    flores:numero
+  comenzar
+    flores:=0
+    izquierda
+    av:=PosAv
+    ca:=PosCa
+    recorrerAvenidaVerde(av,ca,flores)
+  fin
+  robot centralV
+  variables
+    id,flores,av,ca:numero
+    ok:boolean
+  comenzar
+    izquierda
+    RecibirMensaje(id,rf)
+    flores:=0
+    mientras(PosAv > 21)
+      RecibirMensaje(ok,v1)
+      RecibirMensaje(ok,v2)
+      recolectoCentral(flores)
+      mover
+    recolectoCentral(flores)
+    av:=PosAv
+    ca:=PosCa
+    repetir flores
+      depositarEn20(flores,av,ca)
+    EnviarMensaje(id,rf)
+    EnviarMensaje(flores,rf)
+  fin
+  robot centralA
+  variables
+    flores:numero
+    ok:boolean
+    id:numero
+    av,ca:numero
+  comenzar
+    RecibirMensaje(id,rf)
+    derecha
+    flores:=0
+    mientras(PosAv < 19)
+      RecibirMensaje(ok,a1)
+      RecibirMensaje(ok,a2)
+      recolectoCentral(flores)
+      mover
+    recolectoCentral(flores)
+    av:=PosAv
+    ca:=PosCa
+    repetir flores
+      depositarEn20(flores,av,ca)
+    EnviarMensaje(id,rf)
+    EnviarMensaje(flores,rf)
+  fin
+  robot fiscal
+  variables
+    id,f1,f2,fmax,idMax:numero
+    id1, id2:numero
+    ok:boolean
+  comenzar
+    ok:=V
+    EnviarMensaje(1,c1)
+    EnviarMensaje(2,c2)
+    repetir 2
+      RecibirMensaje(id,*)
+      si(id = 1)
+        RecibirMensaje(f1,c1)
+        id1:=id
+      sino
+        RecibirMensaje(f2,c2)
+        id2:=id
+      si(ok)
+        idMax:= id
+        Informar('El equipo que finalizo primero es',idMax)
+        ok:= F       
+    si(f1 > f2)
+      Informar ('El equipo que junto mas flores es',id1)
+    sino
+      Informar ('El equipo que junto mas flores es',id2)
+  fin
+variables
+  a1,a2:lateralesA 
+  v1,v2:lateralesV
+  c1:centralA
+  c2:centralV
+  rf: fiscal
+comenzar
+  AsignarArea(rf, areaFiscal)
+  AsignarArea(a1, areaAzul)
+  AsignarArea(a2, areaAzul)
+  AsignarArea(c1, areaAzul)
+  AsignarArea(c1,esquina)
+  AsignarArea(c2,esquina)
+  AsignarArea(v1,areaVerde)
+  AsignarArea(v2,areaVerde)
+  AsignarArea(c2,areaVerde)
+  Iniciar(rf, 20,18)
+  Iniciar(a1,9,19)
+  Iniciar(a2,9,21)
+  Iniciar(c1, 9,20)
+  Iniciar(v1,31,19)
+  Iniciar(v2,31,21)
+  Iniciar(c2, 31,20)
+fin

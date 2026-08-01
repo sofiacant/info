@@ -1,0 +1,10 @@
+ Type
+  lista=^nodo;
+   elementos= record
+       
+
+  end;
+  nodo=record
+      datos:elementos;
+      sig: lista;
+  end;

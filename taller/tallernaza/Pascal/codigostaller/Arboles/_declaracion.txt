@@ -1,0 +1,6 @@
+arbol = ^nodoA;
+nodoA = record
+  dato: {*****};
+  hi: arbol;
+  hd: arbol;
+end;

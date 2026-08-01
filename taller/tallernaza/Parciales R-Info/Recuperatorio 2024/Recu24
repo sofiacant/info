@@ -1,0 +1,112 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un cÃ³digo de ejemplo que implementa un
+proceso que recibe un nÃºmero de avenida como parÃ¡metro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso juntarP(ES objeto: numero)
+  comenzar
+    si HayPapelEnLaEsquina
+      tomarPapel
+      objeto:=objeto+1
+  fin
+  proceso juntarF(ES objeto: numero)
+  comenzar
+    si HayFlorEnLaEsquina
+      tomarFlor
+      objeto:=objeto+1
+  fin
+areas
+  ciudad: AreaC (1,1,100,100)
+robots
+  robot robot1
+  variables
+    id,equipo,pasos,p,av,ca:numero
+  comenzar
+    p:=0
+    RecibirMensaje(id,RFS)
+    RecibirMensaje(equipo,RFS)
+    Random(pasos,4,8)
+    repetir pasos
+      mover
+    derecha
+    pasos:=pasos*2
+    repetir pasos
+      mover
+    av:=PosAv
+    ca:=PosCa
+    repetir p
+      BloquearEsquina(50,50)
+      Pos(50,50)
+      depositarPapel
+      Pos(av,ca)
+      LiberarEsquina(50,50)
+    
+  fin
+  robot robot2
+  variables
+    id,equipo,pasos,f,av,ca:numero
+  comenzar
+    f:=0
+    RecibirMensaje(id,RFS)
+    RecibirMensaje(equipo,RFS)
+    Random(pasos,3,7)
+    repetir pasos
+      mover
+    derecha
+    derecha
+    derecha
+    pasos:=pasos*2
+    repetir pasos
+      mover
+    av:=PosAv
+    ca:=PosCa
+    repetir f
+      BloquearEsquina(49,49)
+      Pos(49,49)
+      depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(49,49)
+  fin
+  robot robot3
+  variables
+    equipo,f,p,pt,ft:numero
+  comenzar
+    EnviarMensaje(1,RP1)
+    EnviarMensaje(2,RP2)
+    EnviarMensaje(3,RF1)
+    EnviarMensaje(4,RF2)
+    EnviarMensaje(1,RP1)
+    EnviarMensaje(1,RP2)
+    EnviarMensaje(2,RF1)
+    EnviarMensaje(2,RF2)
+    
+    repetir 4
+      RecibirMensaje(equipo,*)
+      si equipo=1
+        RecibirMensaje(p,*)
+        pt:=pt+p
+      sino
+        RecibirMensaje(f,*)
+        ft:=ft+f
+      
+  fin
+variables
+  RP1: robot1
+  RP2: robot1
+  RF1: robot2
+  RF2: robot2
+  RFS: robot3
+comenzar
+  AsignarArea(RP1, ciudad)
+  AsignarArea(RP2, ciudad)
+  AsignarArea(RF1, ciudad)
+  AsignarArea(RF2, ciudad)
+  AsignarArea(RFS, ciudad)
+  Iniciar(RP1, 50,1)
+  Iniciar(RP2,50,20)
+  Iniciar(RF1, 49,1)
+  Iniciar(RF2,49,20)
+  Iniciar(RFS,1,1)
+fin

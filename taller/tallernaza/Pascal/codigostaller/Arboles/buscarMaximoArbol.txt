@@ -1,0 +1,15 @@
+procedure buscarMaximoArbol (a, ptrMax: arbol; var max: {*****});    {ptrMax: puntero del valor maximo} {max: valor maximo}
+begin
+
+  if (a = nil) then begin
+    writeln('El arbol estaba vacio');
+  end
+  else begin
+    while (a^.hd <> nil) do
+
+      a := a^.hd;
+
+    max := a^.dato;
+    ptrMax := a;
+  end;
+end;

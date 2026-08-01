@@ -1,0 +1,15 @@
+procedure buscarMaximoArbol (a: arbol; var ptrMin: arbol; var min: {*****});    {ptrMin: puntero del valor minimo} {min: valor minimo}
+begin
+
+  if (a = nil) then begin
+    writeln('El arbol estaba vacio');
+  end
+  else begin
+    while (a^.hi <> nil) do
+
+      a := a^.hi;
+
+    min := a^.dato;
+    ptrMin := a;
+  end;
+end;

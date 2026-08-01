@@ -1,0 +1,113 @@
+programa ejemplo
+areas
+  ciudad: AreaC (1,1,78,14)
+  depo:AreaPC(99,99,99,99)
+robots
+  robot florero
+  variables
+    ok:boolean
+    flores,esquinas,ancho,alto,miav,mica,id:numero
+  comenzar
+    esquinas:=0
+    Random(alto,1,3)
+    Random(ancho,2,4)
+    esquinas:=0
+    RecibirMensaje(id,jefe)
+    flores:=0
+    
+    repetir 4
+      repetir alto
+        si(HayFlorEnLaEsquina)
+          esquinas:=esquinas+1
+        mientras(HayFlorEnLaEsquina)
+          tomarFlor
+          flores:=flores+1
+        mover
+      si(flores > 0)
+        miav:=PosAv {llevo primer lado del escalon}
+        mica:=PosCa
+        BloquearEsquina(99,99)
+        Pos(99,99)
+        repetir flores
+          depositarFlor
+        flores:=0
+        Pos(miav,mica)
+        LiberarEsquina(99,99)
+      
+      derecha
+      repetir ancho
+        si(HayFlorEnLaEsquina)
+          esquinas:=esquinas+1  
+        mientras(HayFlorEnLaEsquina)
+          tomarFlor
+          flores:=flores+1
+         
+        mover
+      si(flores > 0)
+        miav:=PosAv {llevo segundo lado del escalon}
+        mica:=PosCa
+        BloquearEsquina(99,99)
+        Pos(99,99)
+        repetir flores
+          depositarFlor
+        flores:=0
+        Pos(miav,mica)
+        LiberarEsquina(99,99)
+      
+      repetir 3
+        derecha
+      EnviarMensaje(V,jefe)
+      RecibirMensaje(ok,jefe)
+    EnviarMensaje(id,jefe)  
+    EnviarMensaje(esquinas,jefe)
+  fin
+  
+  robot fiscalizador
+  variables
+    ok:boolean
+    total,esquinasTotal,id:numero
+  comenzar
+    EnviarMensaje(1,robot1)
+    EnviarMensaje(2,robot2)
+    EnviarMensaje(3,robot3)
+    repetir 4
+      repetir 3
+        RecibirMensaje(ok,*)
+      EnviarMensaje(V,robot1)
+      EnviarMensaje(V,robot2)
+      EnviarMensaje(V,robot3)
+    esquinasTotal:=0
+    repetir 3
+      RecibirMensaje(id,*)
+      si(id=1)
+        RecibirMensaje(total,robot1)
+        esquinasTotal:=esquinasTotal+total
+      sino
+        si(id=2)
+          RecibirMensaje(total,robot2)
+          esquinasTotal:=esquinasTotal+total
+        sino
+          si(id=3)
+            RecibirMensaje(total,robot3)
+            esquinasTotal:=esquinasTotal+total
+    Informar(esquinasTotal)
+  fin
+  
+variables
+  robot1: florero
+  robot2: florero
+  robot3: florero
+  jefe: fiscalizador
+comenzar
+  AsignarArea(robot1,ciudad)
+  AsignarArea(robot2,ciudad)
+  AsignarArea(robot3,ciudad)
+  AsignarArea(robot1,depo)
+  AsignarArea(robot2,depo)
+  AsignarArea(robot3,depo)
+  AsignarArea(jefe,ciudad)
+  Iniciar(jefe,1,1)
+  Iniciar(robot1,2,1)
+  Iniciar(robot2,32,1)
+  Iniciar(robot3,62,1)
+fin

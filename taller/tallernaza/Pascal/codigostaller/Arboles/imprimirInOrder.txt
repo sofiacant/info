@@ -1,0 +1,15 @@
+procedure imprimirInOrden (a: arbol);
+
+begin
+
+  if (a <> nil) then begin
+
+    imprimirInOrden(a^.hi);
+
+    write (a^.dato, '    ');
+
+    imprimirInOrden(a^.hd);
+
+  end;
+
+end;

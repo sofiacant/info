@@ -1,0 +1,130 @@
+programa ejemplo
+areas
+  fuenteF:AreaP(10,12,10,12)
+  recoF:AreaP(11,12,11,12)
+  recoP:AreaP(11,10,11,10)
+  fuenteP:AreaP(10,10,10,10)
+  base:AreaPC(12,11,12,11)
+  areaFiscal:AreaP(20,11,20,11)
+  areaDepoF:AreaP(12,12,20,12)
+  areaDepoP:AreaP(12,10,20,12)
+  
+robots
+  robot robot1
+  variables
+    id,equipo,avini,caini:numero
+    ok:boolean
+  comenzar
+    RecibirMensaje(id,RF)
+    RecibirMensaje(equipo,RF)
+    avini:=PosAv
+    caini:=PosCa
+    repetir 8
+      si equipo=1
+        Pos(10,12)
+        tomarFlor
+        BloquearEsquina(12,11)
+        Pos(12,11)
+        depositarFlor
+        Pos(avini,caini)
+        LiberarEsquina(12,11)
+        EnviarMensaje(ok,R2)
+      sino
+        si equipo=2
+          Pos(10,10)
+          tomarPapel
+          BloquearEsquina(12,11)
+          Pos(12,11)
+          depositarPapel
+          Pos(avini,caini)
+          LiberarEsquina(12,11)
+          EnviarMensaje(ok,R4)
+  fin
+  robot robot2
+  variables
+    id,equipo,av,ca,:numero
+    ok:boolean 
+  comenzar
+    RecibirMensaje(id,RF)
+    RecibirMensaje(equipo,RF)
+    av:=PosAv
+    ca:=PosCa
+    derecha
+    si equipo =1
+      repetir 8
+        RecibirMensaje(ok,R1)
+        BloquearEsquina(12,11)
+        Pos(12,11)
+        tomarFlor
+        Pos(av,ca)
+        LiberarEsquina(12,11)
+        mover
+        depositarFlor
+        av:=PosAv
+        ca:=PosCa     
+    sino 
+      si equipo =2
+        repetir 8
+          RecibirMensaje(ok,R3)
+          BloquearEsquina(12,11)
+          Pos(12,11)
+          tomarPapel
+          Pos(av,ca)
+          LiberarEsquina(12,11)
+          mover
+          depositarPapel
+          av:=PosAv
+          ca:=PosCa
+    EnviarMensaje(id,RF) 
+    EnviarMensaje(equipo,RF)     
+    
+  fin
+  robot robot3
+  variables
+    id,ganadores,equipo:numero
+  comenzar
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+    EnviarMensaje(4,R4)
+    EnviarMensaje(1,R1)
+    EnviarMensaje(1,R2)
+    EnviarMensaje(2,R3)
+    EnviarMensaje(2,R4)
+    RecibirMensaje(id,*)
+    si id=2
+      RecibirMensaje(equipo,R2)
+      ganadores:=equipo
+      RecibirMensaje(id,R4)
+      RecibirMensaje(equipo,R4)
+    sino
+      RecibirMensaje(equipo,R4)
+      ganadores:=equipo
+      RecibirMensaje(id,R2)
+      RecibirMensaje(equipo,R2)
+    Informar('equipo ganador ',ganadores)
+  fin
+variables
+  R1: robot1
+  R2: robot2
+  R3: robot1
+  R4: robot2
+  RF: robot3
+comenzar
+  AsignarArea(R1, fuenteF)
+  AsignarArea(R1, recoF)
+  AsignarArea(R1,base)
+  AsignarArea(R2,areaDepoF )
+  AsignarArea(R2,base)
+  AsignarArea(R3,fuenteP)
+  AsignarArea(R3,recoP)
+  AsignarArea(R3,base)
+  AsignarArea(R4,areaDepoP )
+  AsignarArea(R4,base)
+  AsignarArea(RF, areaFiscal)
+  Iniciar(R1, 11,12)
+  Iniciar(R2, 12,12)  
+  Iniciar(R3, 10,10)
+  Iniciar(R4, 12,10)
+  Iniciar(RF, 20,11)
+fin

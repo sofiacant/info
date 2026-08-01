@@ -1,0 +1,72 @@
+programa ejemplo
+procesos
+  proceso juntarFlores(ES flores: numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      flores:= flores+ 1
+  fin
+  proceso recorrerAv(ES flores:numero)
+  comenzar
+    repetir 9
+      juntarFlores(flores)
+      mover
+    juntarFlores(flores)
+  fin
+  proceso actualizarMax(E flores:numero; ES maxF:numero)
+  comenzar
+    si flores > maxF
+      maxF:= flores
+  fin
+areas
+  ciudad1: AreaP (1,1,1,10)
+  ciudad2: AreaP (2,11,2,20)
+  ciudadFisc: AreaP(2,1,2,1)
+  ciudad3: AreaP(3,21,3,30)
+  ciudad4: AreaP(4,31,4,40)
+  ciudad5: AreaP(5,41,5,50)
+  ciudad6: AreaP(6,51,6,60)
+robots
+  robot robot1
+  variables
+    flores:numero
+  comenzar
+    flores:=0
+    recorrerAv(flores)
+    EnviarMensaje(flores,rFisc)
+  fin
+  robot robotFiscal
+  variables
+    maxF,flores:numero
+  comenzar
+    flores:=0
+    maxF:=0
+    repetir 6
+      RecibirMensaje(flores,*)
+      actualizarMax(flores,maxF)
+    Informar('Cantidad de f del ganador ', maxF) 
+  fin
+variables
+  r1: robot1
+  r2: robot1
+  r3: robot1
+  r4: robot1
+  r5: robot1
+  r6: robot1
+  rFisc: robotFiscal
+comenzar
+  AsignarArea(r1, ciudad1)
+  AsignarArea(r2, ciudad2)
+  AsignarArea(r3, ciudad3)
+  AsignarArea(r4, ciudad4)
+  AsignarArea(r5, ciudad5)
+  AsignarArea(r6, ciudad6)
+  AsignarArea(rFisc, ciudadFisc)
+  Iniciar(r1, 1,1)
+  Iniciar(r2, 2,11) 
+  Iniciar(r3, 3,21)
+  Iniciar(r4, 4,31)
+  Iniciar(r5, 5,41)
+  Iniciar(r6, 6,51)
+  Iniciar(rFisc, 2,1)
+fin

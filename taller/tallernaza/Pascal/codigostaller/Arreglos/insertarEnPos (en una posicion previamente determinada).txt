@@ -1,0 +1,13 @@
+procedure insertarEnPos(var v: vector; var dimL: integer; elemento: integer; pos: integer); {Solo lo inserta si pos es menor a dimL. Si pos pudiese ser mayor, usar otro modulo}
+var
+  i: integer;
+
+begin
+  if ((dimF > dimL) and (pos>=1) and (pos<= dimL)) then begin      
+    for  i := dimL downto pos do v[ i + 1 ] := v [ i ];
+    v [pos] := elemento;     
+    dimL := dimL + 1;
+  end
+
+  else writeln('No se pudo realizar la operacion');
+end;

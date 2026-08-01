@@ -1,0 +1,15 @@
+procedure insertarArbol (var a: arbol; dato: {*****});
+begin
+  if (a = nil) then begin
+    new(a);
+    a^.dato := dato;
+    a^.hi := nil;
+    a^.hd := nil;
+  end
+  else begin
+    if (dato < a^.dato) then
+      insertarArbol (a^.hi, dato)
+    else
+      insertarArbol (a^.hd, dato);
+  end;
+end;

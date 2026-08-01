@@ -1,0 +1,132 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemplo
+procesos
+  proceso JuntarF(ES f: numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso JuntarP(ES p: numero)
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:=p+1
+  fin
+  proceso recorridoA1(ES p: numero)
+  comenzar
+    repetir 9
+      JuntarP(p)
+      mover
+    JuntarP(p) 
+         
+  fin
+  proceso recorridoA2(ES p: numero)
+  comenzar
+    repetir 9
+      JuntarP(p)
+      mover
+    JuntarP(p) 
+
+        
+  fin
+  proceso recorridoB1(ES f: numero)
+  comenzar
+    repetir 9
+      JuntarF(f)
+      mover
+    JuntarF(f)
+  fin
+  proceso recorridoB2(ES f: numero)
+  comenzar
+    
+    repetir 9
+      JuntarF(f)
+      mover
+    JuntarF(f)
+  fin
+areas
+  l1:AreaP(1,1,1,10)
+  l2:AreaP(1,11,1,20)
+  l3:AreaP(5,1,5,10)
+  l4:AreaP(5,11,5,20)
+  l11:AreaP(1,21,1,30)
+  l21:AreaP(1,31,1,40)
+  l31:AreaP(5,21,5,30)
+  l41:AreaP(5,31,5,40)
+robots
+  robot robot1
+  variables
+    p:numero
+    ok:boolean
+  comenzar
+    recorridoA1(p)
+    EnviarMensaje(ok,A2)
+    Pos(1,21)
+    RecibirMensaje(ok,A2)
+    recorridoA1(p)
+    EnviarMensaje(p,A2)
+  fin
+  robot robot2
+  variables
+    p:numero
+    ok:boolean
+  comenzar
+    RecibirMensaje(ok,A1)
+    recorridoA2(p)
+    EnviarMensaje(ok,A1)
+    Pos(1,31)
+    RecibirMensaje(p,A1)
+    recorridoA2(p)
+    Informar('Total papeles',p)
+  fin
+  robot robot3
+  variables
+    f:numero
+    ok:boolean
+  comenzar
+    recorridoB1(f)
+    EnviarMensaje(ok,B2)
+    Pos(5,21)
+    RecibirMensaje(ok,B2)
+    recorridoB1(f)
+    EnviarMensaje(f,B2)
+  fin
+  robot robot4
+  variables
+    f:numero
+    ok:boolean
+  comenzar
+    RecibirMensaje(ok,B1)
+    recorridoB2(f)
+    EnviarMensaje(ok,B1)
+    Pos(5,31)
+    RecibirMensaje(f,B1)
+    recorridoB2(f)
+    Informar('Total flores ',f)
+  fin
+variables
+  A1: robot1
+  A2: robot2
+  B1: robot3
+  B2: robot4
+comenzar
+  AsignarArea(A1, l1)
+  AsignarArea(A2, l2)
+  AsignarArea(B1, l3)
+  AsignarArea(B2, l4)
+  AsignarArea(A1, l11)
+  AsignarArea(A2, l21)
+  AsignarArea(B1, l31)
+  AsignarArea(B2, l41)
+  Iniciar(A1, 1,1)
+  Iniciar(A2, 1,11)
+  Iniciar(B1, 5,1)
+  Iniciar(B2, 5,11)
+
+  
+fin

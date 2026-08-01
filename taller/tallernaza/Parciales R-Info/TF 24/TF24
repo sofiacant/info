@@ -1,0 +1,175 @@
+{Bienvenidos al entorno CMRE.
+Lo siguiente es un código de ejemplo que implementa un
+proceso que recibe un número de avenida como parámetro,
+se posiciona en esa avenida y la recorre.}
+
+programa ejemploTF
+procesos
+  proceso juntarF(ES f:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+      f:=f+1
+  fin
+  proceso depositar(E f:numero;E av:numero; E ca:numero)
+  comenzar
+    repetir f
+      BloquearEsquina(20,20)
+      Pos(20,20)
+      depositarFlor
+      Pos(av,ca)
+      LiberarEsquina(20,20)
+    
+  fin
+  proceso buscoFlores(E ftot:numero;E av:numero; E ca:numero)
+  comenzar
+    Pos(20,20)
+    repetir ftot
+      tomarFlor
+    Pos(av,ca)
+  fin
+  proceso recorrer1(ES f: numero)
+  comenzar
+    repetir 9
+      juntarF(f)
+      mover
+    derecha
+    repetir 9 
+      juntarF(f)
+      mover
+    juntarF(f)
+  fin
+  proceso recorrer2(ES f: numero)
+  comenzar
+    derecha
+    derecha
+    repetir 9
+      juntarF(f)
+      mover
+    derecha
+    repetir 9 
+      juntarF(f)
+      mover
+    juntarF(f)
+  fin
+areas
+  a1: AreaP (1,1,1,10)
+  a12:AreaP(2,10,10,10)
+  a2:AreaP(11,1,11,10)
+  a21:AreaP(2,1,10,1)
+  a3:AreaP(13,1,13,10)
+  a31:AreaP(14,10,22,10)
+  a4:AreaP(23,1,23,10)
+  a41:AreaP(14,1,22,1)
+  aj:AreaP(30,1,30,1)
+  adep:AreaPC(20,20,20,20)
+robots
+  robot robot1
+  variables
+    id,equipo,f,av,ca:numero
+    termine:boolean
+  comenzar
+    
+    RecibirMensaje(id,RJ)
+    RecibirMensaje(equipo,RJ)
+    recorrer1(f)
+    av:=PosAv
+    ca:=PosCa
+    termine:=V
+    si equipo=1
+      EnviarMensaje(termine,R2)
+      EnviarMensaje(f,R2)
+    sino
+      si equipo= 2
+        EnviarMensaje(termine,R4)
+        EnviarMensaje(f,R4)
+    depositar(f,av,ca)
+  fin
+  robot robot2
+  variables
+    id,equipo,f,ft,av,ca:numero
+    termine:boolean
+  comenzar
+    ft:=0
+    RecibirMensaje(id,RJ)
+    RecibirMensaje(equipo,RJ)
+    si equipo=1
+      RecibirMensaje(termine,R1)
+      RecibirMensaje(ft,R1)
+    sino
+      RecibirMensaje(termine,R3)
+      RecibirMensaje(ft,R3)
+    recorrer2(f)
+    av:=PosAv
+    ca:=PosCa
+    ft:=ft+f
+    depositar(f,av,ca)
+    EnviarMensaje(equipo,RJ)
+    EnviarMensaje(ft,RJ)
+    
+  fin
+  robot robot3
+  variables
+    equipo,f,f1,f2,fmax,ganador,ftot,av,ca:numero
+  comenzar
+    f1:=0
+    f2:=0
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+    EnviarMensaje(4,R4)
+    EnviarMensaje(1,R1)
+    EnviarMensaje(1,R2)
+    EnviarMensaje(2,R3)
+    EnviarMensaje(2,R4)
+    repetir 2
+      RecibirMensaje(equipo,*)
+      si equipo=1
+        RecibirMensaje(f1,R2)
+      sino
+        RecibirMensaje(f2,R4)
+    av:=PosAv
+    ca:=PosCa
+    ftot:=f1+f2
+    buscoFlores(ftot,av,ca)
+    si f1>f2
+      fmax:=f1
+      ganador:=1
+    sino
+      si f2>f1
+        fmax:=f2
+        ganador:=2
+   {Chequeo que este bien el resultado}
+   { Informar('Flores E1 ',f1)}
+   { Informar('Flores E2',f2)}
+    Informar('Flores ',fmax)
+    Informar('Equipo winner ',ganador)
+      
+  fin
+variables
+  R1: robot1
+  R2: robot2
+  R3: robot1
+  R4: robot2
+  RJ: robot3
+comenzar
+  AsignarArea(R1,a1)
+  AsignarArea(R1,a12)
+  AsignarArea(R2,a2)
+  AsignarArea(R2,a21)
+  AsignarArea(R3,a3)
+  AsignarArea(R3,a31)
+  AsignarArea(R4, a4)
+  AsignarArea(R4, a41)
+  AsignarArea(RJ, aj)
+  AsignarArea(RJ, adep)
+  AsignarArea(R1, adep)
+  AsignarArea(R2, adep)
+  AsignarArea(R3, adep)
+  AsignarArea(R4, adep)
+  Iniciar(R1, 1,1)
+  Iniciar(R2, 11,10)
+  Iniciar(R3, 13,1)
+  Iniciar(R4, 23,10)
+  Iniciar(RJ, 30,1)
+fin

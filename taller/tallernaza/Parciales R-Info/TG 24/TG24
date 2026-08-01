@@ -1,0 +1,150 @@
+programa ejemploTG
+procesos
+  proceso juntar(ES f:numero; ES p:numero)
+  comenzar
+    mientras HayFlorEnLaEsquina 
+      tomarFlor
+      f:=f+1
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+      p:=p+1
+  fin
+  proceso depositar(ES f:numero; ES p:numero; E avIni:numero;E caIni:numero ; E avir:numero; E cair:numero)
+  comenzar
+    repetir f
+      BloquearEsquina(avir,cair)
+      Pos(avir,cair)
+      depositarFlor
+      Pos(avIni,caIni)
+      LiberarEsquina(avir,cair)
+    repetir p
+      BloquearEsquina(avir,cair)
+      Pos(avir,cair)
+      depositarPapel
+      Pos(avIni,caIni)
+      LiberarEsquina(avir,cair)
+    f:=0
+    p:=0 
+  fin
+  proceso juntarT
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso recolectar
+  variables
+    avIni,caIni:numero
+  comenzar
+    Pos(40,40)
+    avIni:=PosAv
+    caIni:=PosCa
+    repetir 5
+      repetir 5
+        juntarT
+        mover
+      juntarT
+      avIni:=avIni+1
+      Pos(avIni,caIni)
+    repetir 5
+      juntarT
+      mover
+    juntarT
+  fin
+  
+
+  proceso recorrerAvenida(ES f: numero;ES p:numero)
+  comenzar
+    repetir 99
+      juntar(f,p)
+      mover
+    juntar(f,p)
+  fin
+areas
+  c4: AreaP (4,1,4,100)
+  c5: AreaP (5,1,5,100)
+  c6: AreaP (6,1,6,100)
+  c7: AreaP (7,1,7,100)
+  c8: AreaP (8,1,8,100)
+  c9: AreaP (9,1,9,100)
+  c10: AreaP (10,1,10,100)
+  c11: AreaP (11,1,11,100)
+  cj: AreaP (1,1,1,1)
+  cdepo: AreaPC (40,40,45,45)
+robots
+  robot robot1
+  variables
+    id,f,p,avIni,caIni,avir,cair:numero
+    ok:boolean
+  comenzar
+    RecibirMensaje(id,RJ)
+    avIni:=PosAv
+    caIni:=PosCa
+    repetir 3
+      recorrerAvenida(f,p)
+      EnviarMensaje(ok,RJ)
+      RecibirMensaje(avir,RJ)
+      RecibirMensaje(cair,RJ)
+      depositar(f,p,avIni,caIni,avir,cair)
+      avIni:=avIni+2
+      Pos(avIni,caIni)
+      LiberarEsquina(avir,cair)
+    recorrerAvenida(f,p)
+    EnviarMensaje(ok,RJ)
+    RecibirMensaje(avir,RJ)
+    RecibirMensaje(cair,RJ)
+    depositar(f,p,avIni,caIni,avir,cair)
+    EnviarMensaje(id,RJ)
+    
+  fin
+  robot robot2
+  variables
+    id,av,ca,avI,caI,ganador:numero
+    ok:boolean
+  comenzar
+    
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    repetir 4
+      repetir 2
+        RecibirMensaje(ok,*)
+      Random(av,40,45)
+      Random(ca,40,45)
+      EnviarMensaje(av,R1)
+      EnviarMensaje(ca,R1)
+      EnviarMensaje(av,R2)
+      EnviarMensaje(ca,R2)
+    RecibirMensaje(id,*)
+    ganador:=id
+    RecibirMensaje(id,*)
+    avI:=PosAv
+    caI:=PosCa
+    recolectar
+    Pos(avI,caI)
+    Informar('Winner ',ganador)
+     
+  fin
+    
+variables
+  R1,R2: robot1
+  RJ: robot2
+comenzar
+  AsignarArea(R1, c4)
+  AsignarArea(R1, c6)
+  AsignarArea(R1, c8)
+  AsignarArea(R1, c10)
+  AsignarArea(R1, cdepo)
+  AsignarArea(R2, c5)
+  AsignarArea(R2, c7)
+  AsignarArea(R2, c9)
+  AsignarArea(R2, c11)  
+  AsignarArea(R2, cdepo)
+  AsignarArea(RJ, cdepo)
+  AsignarArea(RJ, cj)
+  Iniciar(R1, 4,1)
+  Iniciar(R2, 5,1)
+  Iniciar(RJ, 1,1)
+ 
+  
+fin

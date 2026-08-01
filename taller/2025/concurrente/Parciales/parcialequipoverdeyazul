@@ -1,0 +1,89 @@
+
+programa parcialequipos
+procesos
+  proceso juntarPapeles(ES papeles:numero)
+  comenzar
+    mientras (HayPapelEnLaEsquina)
+      tomarPapel
+      papeles:=papeles+1
+  fin
+  proceso juntarFlores(ES flores:numero)
+  comenzar
+    mientras(HayFlorEnLaEsquina)
+      tomarFlor
+      flores:=flores+1
+  fin
+  proceso recorridoFlores(ES flores:numero)
+  variables
+    av,ca,flores:numero
+    papeles:numero
+  comenzar
+    derecha
+    repetir 4
+      juntarFlores(flores)
+      mover
+    av:=PosAv+1
+    ca:=PosCa
+    interseccion(av,ca,F,papeles,flores)
+    repetir 4
+      juntarFlores(flores)
+      mover
+  fin
+  proceso recorridoPapeles(ES papeles:numero)
+  variables
+    av,ca:numero
+    flores:numero
+  comenzar
+    repetir 7
+      juntarPapeles(papeles)
+      mover
+    av:=PosAv
+    ca:=PosCa+1
+    interseccion(av,ca,F,papeles,flores)
+    repetir 11
+      juntarPapeles(papeles)
+      mover
+    juntarPapeles(papeles)
+  fin
+  proceso interseccion(E av:numero; E ca:numero E ok:boolean; ES papeles:numero; ES flores:numero)
+  comenzar
+    BloquearEsquina(av,ca)
+    Pos(av,ca)
+    si (ok)
+      juntarFlores(flores)
+    sino
+      juntarPapeles(papeles)
+    mover
+    LiberarEsquina(av,ca)
+  fin
+areas
+  areaVerde: AreaPC (16,4,26,24)
+  areaAzul: AreaPC(2,4,12,24)
+robots
+  robot florero
+  variables
+    flores:numero
+  comenzar
+    flores:=0
+    recorridoFlores(flores)
+  fin
+  robot papelero
+  variables
+    papeles:numero
+  comenzar
+    recorridoPapeles(papeles)
+   
+  fin
+variables
+  fa,fv:florero
+  pa,pv:papelero
+comenzar
+  AsignarArea(fa,areaAzul)
+  AsignarArea(pa,areaAzul)
+  AsignarArea(fv,areaVerde)
+  AsignarArea(pv,areaVerde)
+  Iniciar(fa,2,12)
+  Iniciar(pa,7,4)
+  Iniciar(fv,16,12)
+  Iniciar(pv,21,4)
+fin

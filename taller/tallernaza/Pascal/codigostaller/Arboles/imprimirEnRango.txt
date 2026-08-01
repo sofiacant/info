@@ -1,0 +1,13 @@
+procedure imprimirEnRango (a: arbol; inf, sup: integer);
+     if (arbol<> nil) then begin
+         if (arbol^. {registro.dato} >= inf) and (arbol^.{registro.dato} <= sup) then  
+               writeln(arbol^.{valor en arbol});
+     end;
+     imprimirEnRango (a^.hi, inf, sup);   
+     imprimirEnRango (a^.hd, inf, sup);
+end;
+
+{Para cuando necesitas imprimir dentro de un rango, un dato que no es el criterio de orden del arbol, y para esto necesitas recorrer cada hoja del arbol}
+{sirve tambien para contar (un dato que no es el criterio de orden), en vez de write, se usa una variable que vaya sumando
+ej:contador:=contador+1 y debe tener un parametro por referencia donde mandarle el contador
+procedure ImprimirAcotado(arbol:arbol; inf, sup:integer; var contador:integer);}

@@ -1,0 +1,120 @@
+programa ejemplo
+procesos
+  proceso JuntarF
+  comenzar
+    mientras HayFlorEnLaEsquina
+      tomarFlor
+  fin
+  proceso DepositarF
+  comenzar
+    mientras HayFlorEnLaBolsa
+      depositarFlor
+  fin
+  proceso JuntarP
+  comenzar
+    mientras HayPapelEnLaEsquina
+      tomarPapel
+  fin
+  proceso DepositarP
+  comenzar
+    mientras HayPapelEnLaBolsa
+      depositarPapel
+  fin
+  proceso recorrerAvenidaR1
+  comenzar
+    repetir 14
+      JuntarF
+      mover
+    JuntarF
+    DepositarF
+  fin
+  proceso recorrerAvenidaR2
+  variables
+    avIni:numero
+    caIni:numero
+  comenzar
+    avIni:=PosAv
+    caIni:=PosCa
+    repetir 20
+      JuntarP
+      mover
+    JuntarP
+    Pos(avIni,caIni)
+    DepositarP
+  fin
+  proceso recorrerAvenidaR3
+  comenzar
+    repetir 30
+      JuntarF
+      mover
+    JuntarF
+    DepositarF
+  fin
+  proceso recorrerAvenidaR4
+  variables
+    avIni:numero
+    caIni:numero
+  comenzar
+    avIni:=PosAv
+    caIni:=PosCa
+    repetir 9
+      JuntarP
+      mover
+    JuntarP
+    DepositarP
+  fin
+areas
+  areaR11: AreaP(1,75,15,75)
+  areaR12: AreaP(1,80,15,80)
+  areaR21: AreaP(75,80,75,100)
+  areaR22: AreaP(80,80,80,100)
+  areaR31: AreaP(70,10,100,10)
+  areaR32: AreaP(70,15,100,15)
+  areaR41:AreaP(10,1,10,10)
+  areaR42:AreaP(15,1,15,10)
+robots
+  robot robot1
+  comenzar
+    derecha
+    recorrerAvenidaR1
+    Pos(1,80)
+    recorrerAvenidaR1
+  fin
+  robot robot2
+  comenzar
+    recorrerAvenidaR2
+    Pos(80,80)
+    recorrerAvenidaR2
+  fin
+  robot robot3
+  comenzar
+    derecha
+    recorrerAvenidaR3
+    Pos(70,15)
+    recorrerAvenidaR3
+  fin
+  robot robot4
+  comenzar
+    recorrerAvenidaR4
+    Pos(15,1)
+    recorrerAvenidaR4
+  fin
+variables
+  R1 : robot1
+  R2 : robot2
+  R3 : robot3
+  R4 : robot4
+comenzar
+  AsignarArea(R1, areaR11)
+  AsignarArea(R1, areaR12)
+  AsignarArea(R2, areaR21)
+  AsignarArea(R2, areaR22)
+  AsignarArea(R3, areaR31)
+  AsignarArea(R3, areaR32)
+  AsignarArea(R4, areaR41)
+  AsignarArea(R4, areaR42)
+  Iniciar(R1, 1,75)
+  Iniciar(R2, 75,80)
+  Iniciar(R3, 70,10)
+  Iniciar(R4, 10,1)
+fin

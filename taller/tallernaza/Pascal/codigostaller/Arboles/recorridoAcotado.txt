@@ -1,0 +1,17 @@
+procedure recorridoAcotado (a: arbol; inf, sup: integer);
+begin
+  if (a <> nil) then begin
+    if (a^.dato >= inf) then begin
+      if (a^.dato <= sup) then begin
+        writeln(a^.dato);
+        recorridoAcotado(a^.hi, inf, sup);
+        recorridoAcotado(a^.hd, inf, sup);
+      end
+      else begin
+        recorridoAcotado(a^.hi, inf, sup);
+    end
+    else begin
+      recorridoAcotado(a^.hd, inf, sup);
+    end;
+  end;
+end;

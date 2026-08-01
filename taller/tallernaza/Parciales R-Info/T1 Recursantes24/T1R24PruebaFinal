@@ -1,0 +1,96 @@
+{Anda lo mas bien pero en el caso que un robot mande msj a luego de que envio uno se rompe.}
+
+programa ejemplo
+procesos
+  proceso juntarF(ES ok:boolean)
+  comenzar
+    si HayFlorEnLaEsquina
+      tomarFlor
+      ok := V
+    sino
+      ok:=F
+  fin
+
+areas
+  areaC: AreaPC (10,10,13,13)
+  a1: AreaP(1,1,1,1)
+  a2:AreaP(2,2,2,2)
+  a3:AreaP(3,3,3,3)
+  af:AreaP(4,4,4,4)
+robots
+  robot robot1
+  variables
+    id,avIni,caIni,caI,avI:numero
+    ok,termine:boolean
+  comenzar
+    RecibirMensaje(id,RF)
+    avIni:=PosAv
+    caIni:=PosCa
+    RecibirMensaje(termine,RF)
+    mientras termine=F                     
+      Random(avI,10,13)
+      Random(caI,10,13)
+      BloquearEsquina(avI,caI)
+      Pos(avI,caI)
+      juntarF(ok)
+      Pos(avIni,caIni)
+      LiberarEsquina(avI,caI)
+      EnviarMensaje(ok,RF)
+      RecibirMensaje(termine,RF)
+    si ok=V
+      EnviarMensaje(id,RF)
+   
+          
+      
+  fin
+  robot robot2
+  variables 
+    id,ganador,avIni,caIni,av,ca,stop:numero
+    ok,termino:boolean
+  comenzar
+    EnviarMensaje(1,R1)
+    EnviarMensaje(2,R2)
+    EnviarMensaje(3,R3)
+    avIni:=PosAv
+    caIni:=PosCa
+    si HayFlorEnLaEsquina
+      tomarFlor
+    Random(av,10,13)
+    Random(ca,10,13)
+    Pos(av,ca)
+    depositarFlor
+    Pos(avIni,caIni)
+    ok:=F
+    EnviarMensaje(ok,R1)
+    EnviarMensaje(ok,R2)
+    EnviarMensaje(ok,R3)
+    termino:=F
+    mientras termino=F
+      repetir 3
+        RecibirMensaje(ok,*)
+        si ok=V
+          termino:=V
+      EnviarMensaje(termino,R1)
+      EnviarMensaje(termino,R2)
+      EnviarMensaje(termino,R3)
+    RecibirMensaje(id,*)
+    ganador:=id
+    Informar('WINER ',ganador)
+  fin
+variables
+  R1,R2,R3: robot1
+  RF:robot2
+comenzar
+  AsignarArea(R1, a1)
+  AsignarArea(R1,areaC)
+  AsignarArea(R2, a2)
+  AsignarArea(R2,areaC)
+  AsignarArea(R3, a3)
+  AsignarArea(R3,areaC)
+  AsignarArea(RF, af)
+  AsignarArea(RF,areaC)
+  Iniciar(R1, 1,1)
+  Iniciar(R2, 2,2)
+  Iniciar(R3, 3,3)
+  Iniciar(RF, 4,4)
+fin

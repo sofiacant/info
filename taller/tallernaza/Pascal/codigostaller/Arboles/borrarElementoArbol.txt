@@ -1,0 +1,54 @@
+procedure buscarMinimoArbol (a: arbol; var min: arbol);
+
+begin
+  while (a^.hi <> nil) do
+    a := a^.hi;
+  min := a;
+end;
+
+
+procedure buscarMaximoArbol (a, max: arbol);
+begin
+    while (a^.hd <> nil) do
+      a := a^.hd;
+    max := a;
+end;
+
+
+procedure borrarElementoArbol (var a: arbol; dato: {*****});
+var
+  aux, min, max: arbol;
+begin
+  if (a = nil) then begin
+    writeln('No se encontro el dato a borrar');
+  end
+  else begin
+    if (dato < a^.dato) then begin
+      borrarElementoArbol(a^.hi, dato);
+    end
+    else begin
+      if (dato > a^.dato) then begin
+        borrarElementoArbol(a^.hd, dato);
+      end
+      else begin
+        if ((a^.hi = nil) and (a^.hd = nil) then begin
+          dispose(a);
+        end
+        else begin
+          if (a^.hi = nil) then begin
+            buscarMinimoArbol (a^.hd, min);
+            a^.dato := min^.dato;
+            a^.hd^.hi = min^.hd;
+            dispose(min);
+          end
+          else begin
+            buscarMaximoArbol(a^.hi, max);
+            a^.dato := min^.dato;
+            a^.hi^.hd = max^.hi;
+            dispose(max);
+          end;
+        end;
+      end;
+    end;
+  end;
+end;

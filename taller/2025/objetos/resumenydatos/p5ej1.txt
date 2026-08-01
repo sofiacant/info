@@ -1,0 +1,177 @@
+
+package Practica5.Ejercicio1;
+
+import PaqueteLectura.GeneradorAleatorio;
+ 
+public class Ejercicio1 {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+        GeneradorAleatorio.iniciar();
+        Proyecto p = new Proyecto("Proyectito tito", 777, "Valentin Fiaccola");
+      
+            Investigador inv1 = new Investigador("valen", 3, "nosee");
+            Investigador inv2 = new Investigador("sofi",2,"ni idea");
+            Investigador inv3 = new Investigador("orne",4,"qsy");
+           
+                Subsidio sinv1 = new Subsidio(543, GeneradorAleatorio.generarString(10));
+                Subsidio sinv2 = new Subsidio(5563, GeneradorAleatorio.generarString(10));
+                inv1.agregarSubsidio(sinv1);
+                inv1.agregarSubsidio(sinv2);
+                Subsidio s2 = new Subsidio(546, GeneradorAleatorio.generarString(10));
+                inv2.agregarSubsidio(s2);
+                Subsidio s3 = new Subsidio(435, GeneradorAleatorio.generarString(10));
+                inv3.agregarSubsidio(s3);
+                
+            
+           
+            p.agregarInvestigador(inv1);
+            p.agregarInvestigador(inv2);
+            p.agregarInvestigador(inv3);
+        
+  inv1.otorgarTodos("valen"); 
+  System.out.println(p.toString());
+  
+    }
+}
+
+-------------------------------------------------------------------------------------------------
+package Practica5.Ejercicio1;                                     //INVESTIFGADOR
+-
+public class Investigador {
+    private String nombreCompleto;
+    private int categ;
+    private String especialidad;
+    private int dimFinv=5;
+    private int dimLinv=0;
+    Subsidio [] vecSubsidios;
+    
+    public Investigador (String unNombreCompleto, int unaCateg, String unaEspecialidad){
+        this.nombreCompleto=unNombreCompleto;
+        setCateg(unaCateg);
+        this.especialidad=unaEspecialidad;
+        vecSubsidios= new Subsidio [dimFinv];
+    }    
+    public void setCateg(int categ) {
+        if ((categ >= 1) && (categ <=5))
+            this.categ = categ; 
+    }
+
+    public void agregarSubsidio (Subsidio unSubsidio){
+        if (dimLinv<dimFinv){
+            vecSubsidios[dimLinv]=unSubsidio;
+            vecSubsidios[dimLinv].setOtorgado(true);
+            dimLinv++;
+        }
+    }
+    
+    public int getDimL (){
+        return dimLinv;
+    }
+    
+    public double getTotalSubsidios (){
+        int suma=0;
+        for (int i=0;i<dimLinv; i++){
+            suma+=vecSubsidios[i].getMonto();
+        }
+        return suma;
+    }
+
+    public String toString() {
+        return "Investigador " + nombreCompleto + "| categ " + categ + "| especialidad " + especialidad+" | " ;
+    }
+    
+    
+    public  void otorgarTodos(String nombreCompleto){
+        String str="";
+        for (int i=0; i<dimLinv; i++){
+            if (vecSubsidios[i].isOtorgado())
+                str+=" "+vecSubsidios[i].toString()+" \n";
+        }
+        System.out.println(this.toString()+" \n"+str);
+    }
+
+    
+}
+
+----------------------------------------------------------------------------
+package Practica5.Ejercicio1;               //PROYECTO
+
+public class Proyecto {
+
+    private String nombre;
+    private int codigo;
+    private String nombreCompleto;
+    private int DF = 50;
+    private int DL = 0;
+    Investigador[] vecInv;
+
+    public Proyecto(String unNombre, int unCodigo, String unNombreCompleto) {
+        this.nombre = unNombre;
+        this.codigo = unCodigo;
+        this.nombreCompleto = unNombreCompleto;
+        vecInv = new Investigador[this.DF];
+    }
+
+    public void agregarInvestigador(Investigador unInvestigador) {
+        if (this.DL < this.DF) {
+            vecInv[this.DL] = unInvestigador;
+            this.DL++;
+        }
+    }
+
+    public double dineroTotalOtorgado() {
+        double total = 0;
+        for (int i = 0; i < DL; i++) {
+
+            total = vecInv[i].getTotalSubsidios();
+
+        }
+        return total;
+    }
+
+    public String toString() {
+        String aux = "";
+        for (int i = 0; i < DL; i++) {
+            aux += vecInv[i].toString() + " Total: " + vecInv[i].getTotalSubsidios()+"\n";
+        }
+        return "---  "+nombre + " Codigo: "+codigo +" Nombre del Director: "+nombreCompleto+" ---"+ "\n" + aux;
+    }
+
+}
+
+-----------------------------------------------------------------------------------------------
+package Practica5.Ejercicio1;                     //SUBSIDIO
+
+public class Subsidio {
+    private double monto;
+    private String motivo;
+    private boolean otorgado;
+
+    public Subsidio (double unMonto, String unMotivo){
+        this.monto=unMonto;
+        this.motivo=unMotivo;
+        setOtorgado(otorgado);
+    }
+
+    public void setOtorgado(boolean fueOtorgado){
+        this.otorgado=fueOtorgado;
+    }
+    public double getMonto() {
+        return monto;
+    }
+
+    public boolean isOtorgado() {
+        return otorgado;
+    }
+
+    @Override
+    public String toString() {
+        return "Subsidio " + "| monto= " + monto + ", motivo=" + motivo + ", otorgado=" + otorgado + '}';
+    }
+
+}
+
