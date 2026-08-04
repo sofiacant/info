@@ -1,5 +1,6 @@
 # pascal
 *.o
+*.exe
 
 # java
 **build/
